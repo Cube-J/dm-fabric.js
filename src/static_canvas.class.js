@@ -140,7 +140,7 @@
      * canvas.viewportTransform = [0.7, 0, 0, 0.7, 50, 50];
      * @default
      */
-    viewportTransform: fabric.iMatrix.concat(),
+    viewportTransform: window.iMatrix.concat(),
 
     /**
      * if set to false background image is not affected by viewport transform
@@ -217,7 +217,7 @@
      * @private
      */
     _isRetinaScaling: function() {
-      return (fabric.devicePixelRatio > 1 && this.enableRetinaScaling);
+      return (window.devicePixelRatio > 1 && this.enableRetinaScaling);
     },
 
     /**
@@ -225,7 +225,7 @@
      * @return {Number} retinaScaling if applied, otherwise 1;
      */
     getRetinaScaling: function() {
-      return this._isRetinaScaling() ? Math.max(1, fabric.devicePixelRatio) : 1;
+      return this._isRetinaScaling() ? Math.max(1, window.devicePixelRatio) : 1;
     },
 
     /**
@@ -235,7 +235,7 @@
       if (!this._isRetinaScaling()) {
         return;
       }
-      var scaleRatio = fabric.devicePixelRatio;
+      var scaleRatio = window.devicePixelRatio;
       this.__initRetinaScaling(scaleRatio, this.lowerCanvasEl, this.contextContainer);
       if (this.upperCanvasEl) {
         this.__initRetinaScaling(scaleRatio, this.upperCanvasEl, this.contextTop);
@@ -1255,7 +1255,7 @@
     createSVGFontFacesMarkup: function() {
       var markup = '', fontList = { }, obj, fontFamily,
           style, row, rowIndex, _char, charIndex, i, len,
-          fontPaths = fabric.fontPaths, objects = [];
+          fontPaths = window.fontPaths, objects = [];
 
       this._objects.forEach(function add(object) {
         objects.push(object);
@@ -1707,15 +1707,4 @@
    * var json = canvas.toJSON();
    */
   fabric.StaticCanvas.prototype.toJSON = fabric.StaticCanvas.prototype.toObject;
-
-  if (fabric.isLikelyNode) {
-    fabric.StaticCanvas.prototype.createPNGStream = function() {
-      var impl = getNodeCanvas(this.lowerCanvasEl);
-      return impl && impl.createPNGStream();
-    };
-    fabric.StaticCanvas.prototype.createJPEGStream = function(opts) {
-      var impl = getNodeCanvas(this.lowerCanvasEl);
-      return impl && impl.createJPEGStream(opts);
-    };
-  }
 })();

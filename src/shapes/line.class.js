@@ -256,7 +256,7 @@
    * @memberOf fabric.Line
    * @see http://www.w3.org/TR/SVG/shapes.html#LineElement
    */
-  fabric.Line.ATTRIBUTE_NAMES = fabric.SHARED_ATTRIBUTES.concat('x1 y1 x2 y2'.split(' '));
+  fabric.Line.ATTRIBUTE_NAMES = window.SHARED_ATTRIBUTES.concat('x1 y1 x2 y2'.split(' '));
 
   /**
    * Returns fabric.Line instance from an SVG element

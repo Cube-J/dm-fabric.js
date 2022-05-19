@@ -8,7 +8,7 @@
       toFixed = fabric.util.toFixed,
       capitalize = fabric.util.string.capitalize,
       degreesToRadians = fabric.util.degreesToRadians,
-      objectCaching = !fabric.isLikelyNode,
+      objectCaching = true,
       ALIASING_LIMIT = 2;
 
   if (fabric.Object) {
@@ -669,7 +669,7 @@
     },
 
     /**
-     * Limit the cache dimensions so that X * Y do not cross fabric.perfLimitSizeTotal
+     * Limit the cache dimensions so that X * Y do not cross window.perfLimitSizeTotal
      * and each side do not cross fabric.cacheSideLimit
      * those numbers are configurable so that you can get as much detail as you want
      * making bargain with performances.
@@ -684,9 +684,9 @@
      * @return {Object}.zoomY zoomY zoom value to unscale the canvas before drawing cache
      */
     _limitCacheSize: function(dims) {
-      var perfLimitSizeTotal = fabric.perfLimitSizeTotal,
+      var perfLimitSizeTotal = window.perfLimitSizeTotal,
           width = dims.width, height = dims.height,
-          max = fabric.maxCacheSideLimit, min = fabric.minCacheSideLimit;
+          max = window.maxCacheSideLimit, min = window.minCacheSideLimit;
       if (width <= max && height <= max && width * height <= perfLimitSizeTotal) {
         if (width < min) {
           dims.width = min;
@@ -760,7 +760,7 @@
       }
       var canvas = this._cacheCanvas,
           dims = this._limitCacheSize(this._getCacheCanvasDimensions()),
-          minCacheSize = fabric.minCacheSideLimit,
+          minCacheSize = window.minCacheSideLimit,
           width = dims.width, height = dims.height, drawingWidth, drawingHeight,
           zoomX = dims.zoomX, zoomY = dims.zoomY,
           dimensionsChanged = width !== this.cacheWidth || height !== this.cacheHeight,
@@ -1031,7 +1031,7 @@
       if (this.canvas && this.canvas.viewportTransform) {
         return this.canvas.viewportTransform;
       }
-      return fabric.iMatrix.concat();
+      return window.iMatrix.concat();
     },
 
     /*
@@ -1426,11 +1426,11 @@
           multY = (canvas && canvas.viewportTransform[3]) || 1,
           scaling = shadow.nonScaling ? new fabric.Point(1, 1) : this.getObjectScaling();
       if (canvas && canvas._isRetinaScaling()) {
-        multX *= fabric.devicePixelRatio;
-        multY *= fabric.devicePixelRatio;
+        multX *= window.devicePixelRatio;
+        multY *= window.devicePixelRatio;
       }
       ctx.shadowColor = shadow.color;
-      ctx.shadowBlur = shadow.blur * fabric.browserShadowBlurConstant *
+      ctx.shadowBlur = shadow.blur * window.browserShadowBlurConstant *
         (multX + multY) * (scaling.x + scaling.y) / 4;
       ctx.shadowOffsetX = shadow.offsetX * multX * scaling.x;
       ctx.shadowOffsetY = shadow.offsetY * multY * scaling.y;
@@ -1691,7 +1691,7 @@
       var utils = fabric.util, origParams = utils.saveObjectTransform(this),
           originalGroup = this.group,
           originalShadow = this.shadow, abs = Math.abs,
-          retinaScaling = options.enableRetinaScaling ? Math.max(fabric.devicePixelRatio, 1) : 1,
+          retinaScaling = options.enableRetinaScaling ? Math.max(window.devicePixelRatio, 1) : 1,
           multiplier = (options.multiplier || 1) * retinaScaling;
       delete this.group;
       if (options.withoutTransform) {

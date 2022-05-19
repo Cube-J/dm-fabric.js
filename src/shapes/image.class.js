@@ -410,7 +410,7 @@
         return;
       }
       if (!fabric.filterBackend) {
-        fabric.filterBackend = fabric.initFilterBackend();
+        fabric.filterBackend = window.initFilterBackend();
       }
       var canvasEl = fabric.util.createCanvasElement(),
           cacheKey = this._filteredEl ? (this.cacheKey + '_filtered') : this.cacheKey,
@@ -473,7 +473,7 @@
         this._lastScaleY = 1;
       }
       if (!fabric.filterBackend) {
-        fabric.filterBackend = fabric.initFilterBackend();
+        fabric.filterBackend = window.initFilterBackend();
       }
       fabric.filterBackend.applyFilters(
         filters, this._originalElement, sourceWidth, sourceHeight, this._element, this.cacheKey);
@@ -723,7 +723,7 @@
    * @see {@link http://www.w3.org/TR/SVG/struct.html#ImageElement}
    */
   fabric.Image.ATTRIBUTE_NAMES =
-    fabric.SHARED_ATTRIBUTES.concat(
+    window.SHARED_ATTRIBUTES.concat(
       'x y width height preserveAspectRatio xlink:href crossOrigin image-rendering'.split(' ')
     );
 

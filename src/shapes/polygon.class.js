@@ -53,7 +53,7 @@
    * @memberOf fabric.Polygon
    * @see: http://www.w3.org/TR/SVG/shapes.html#PolygonElement
    */
-  fabric.Polygon.ATTRIBUTE_NAMES = fabric.SHARED_ATTRIBUTES.concat();
+  fabric.Polygon.ATTRIBUTE_NAMES = window.SHARED_ATTRIBUTES.concat();
 
   /**
    * Returns {@link fabric.Polygon} instance from an SVG element

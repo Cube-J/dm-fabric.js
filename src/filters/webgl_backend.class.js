@@ -24,18 +24,15 @@
    * @param {Number} tileSize check if the tileSize is supported
    * @returns {Boolean} Whether the user's browser supports WebGL.
    */
-  fabric.isWebglSupported = function(tileSize) {
-    if (fabric.isLikelyNode) {
-      return false;
-    }
+  window.isWebglSupported = function(tileSize) {
     tileSize = tileSize || fabric.WebglFilterBackend.prototype.tileSize;
     var canvas = document.createElement('canvas');
     var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
     var isSupported = false;
     // eslint-disable-next-line
     if (gl) {
-      fabric.maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
-      isSupported = fabric.maxTextureSize >= tileSize;
+      window.maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+      isSupported = window.maxTextureSize >= tileSize;
       var precisions = ['highp', 'mediump', 'lowp'];
       for (var i = 0; i < 3; i++){
         if (testPrecision(gl, precisions[i])){
@@ -112,7 +109,7 @@
       var targetCanvas = fabric.util.createCanvasElement();
       // eslint-disable-next-line no-undef
       var imageBuffer = new ArrayBuffer(width * height * 4);
-      if (fabric.forceGLPutImageData) {
+      if (window.forceGLPutImageData) {
         this.imageBuffer = imageBuffer;
         this.copyGLTo2D = copyGLTo2DPutImageData;
         return;

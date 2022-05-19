@@ -227,7 +227,7 @@
    * @memberOf fabric.Polyline
    * @see: http://www.w3.org/TR/SVG/shapes.html#PolylineElement
    */
-  fabric.Polyline.ATTRIBUTE_NAMES = fabric.SHARED_ATTRIBUTES.concat();
+  fabric.Polyline.ATTRIBUTE_NAMES = window.SHARED_ATTRIBUTES.concat();
 
   /**
    * Returns fabric.Polyline instance from an SVG element

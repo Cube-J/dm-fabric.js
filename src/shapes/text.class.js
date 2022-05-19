@@ -709,10 +709,10 @@
      */
     getFontCache: function(decl) {
       var fontFamily = decl.fontFamily.toLowerCase();
-      if (!fabric.charWidthsCache[fontFamily]) {
-        fabric.charWidthsCache[fontFamily] = { };
+      if (!window.charWidthsCache[fontFamily]) {
+        window.charWidthsCache[fontFamily] = { };
       }
-      var cache = fabric.charWidthsCache[fontFamily],
+      var cache = window.charWidthsCache[fontFamily],
           cacheProp = decl.fontStyle.toLowerCase() + '_' + (decl.fontWeight + '').toLowerCase();
       if (!cache[cacheProp]) {
         cache[cacheProp] = { };
@@ -1506,8 +1506,8 @@
       return [
         // node-canvas needs "weight style", while browsers need "style weight"
         // verify if this can be fixed in JSDOM
-        (fabric.isLikelyNode ? style.fontWeight : style.fontStyle),
-        (fabric.isLikelyNode ? style.fontStyle : style.fontWeight),
+        style.fontStyle,
+        style.fontWeight,
         forMeasuring ? this.CACHE_FONT_SIZE + 'px' : style.fontSize + 'px',
         fontFamily
       ].join(' ');
@@ -1624,7 +1624,7 @@
    * @memberOf fabric.Text
    * @see: http://www.w3.org/TR/SVG/text.html#TextElement
    */
-  fabric.Text.ATTRIBUTE_NAMES = fabric.SHARED_ATTRIBUTES.concat(
+  fabric.Text.ATTRIBUTE_NAMES = window.SHARED_ATTRIBUTES.concat(
     'x y dx dy font-family font-style font-weight font-size letter-spacing text-decoration text-anchor'.split(' '));
 
   /**

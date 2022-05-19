@@ -146,7 +146,7 @@
    * @memberOf fabric.Rect
    * @see: http://www.w3.org/TR/SVG/shapes.html#RectElement
    */
-  fabric.Rect.ATTRIBUTE_NAMES = fabric.SHARED_ATTRIBUTES.concat('x y rx ry width height'.split(' '));
+  fabric.Rect.ATTRIBUTE_NAMES = window.SHARED_ATTRIBUTES.concat('x y rx ry width height'.split(' '));
 
   /**
    * Returns {@link fabric.Rect} instance from an SVG element

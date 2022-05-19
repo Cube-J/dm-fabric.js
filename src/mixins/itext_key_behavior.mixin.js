@@ -4,7 +4,7 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
    * Initializes hidden textarea (needed to bring up keyboard in iOS)
    */
   initHiddenTextarea: function() {
-    this.hiddenTextarea = fabric.document.createElement('textarea');
+    this.hiddenTextarea = document.createElement('textarea');
     this.hiddenTextarea.setAttribute('autocapitalize', 'off');
     this.hiddenTextarea.setAttribute('autocorrect', 'off');
     this.hiddenTextarea.setAttribute('autocomplete', 'off');
@@ -22,7 +22,7 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
       this.hiddenTextareaContainer.appendChild(this.hiddenTextarea);
     }
     else {
-      fabric.document.body.appendChild(this.hiddenTextarea);
+      document.body.appendChild(this.hiddenTextarea);
     }
 
     fabric.util.addListener(this.hiddenTextarea, 'blur', this.blur.bind(this));
@@ -240,7 +240,7 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
       this.removeStyleFromTo(removeFrom, removeTo);
     }
     if (insertedText.length) {
-      if (fromPaste && insertedText.join('') === fabric.copiedText && !fabric.disableStyleCopyPaste) {
+      if (fromPaste && insertedText.join('') === fabric.copiedText && !window.disableStyleCopyPaste) {
         copiedStyle = fabric.copiedTextStyle;
       }
       this.insertNewStyleBlock(insertedText, selectionStart, copiedStyle);
@@ -286,7 +286,7 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
     }
 
     fabric.copiedText = this.getSelectedText();
-    if (!fabric.disableStyleCopyPaste) {
+    if (!window.disableStyleCopyPaste) {
       fabric.copiedTextStyle = this.getSelectionStyles(this.selectionStart, this.selectionEnd, true);
     }
     else {

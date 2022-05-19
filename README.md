@@ -1,3 +1,6 @@
+## dm-fabric.js
+Fabric.js package with es6 imports suppprted in browser. Not supported in Node.js.
+
 ## Fabric.js
 
 <!-- build/coverage status, climate -->

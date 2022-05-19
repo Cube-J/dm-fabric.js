@@ -104,7 +104,7 @@ fabric.BaseBrush = fabric.util.createClass(/** @lends fabric.BaseBrush.prototype
         ctx = canvas.contextTop,
         zoom = canvas.getZoom();
     if (canvas && canvas._isRetinaScaling()) {
-      zoom *= fabric.devicePixelRatio;
+      zoom *= window.devicePixelRatio;
     }
 
     ctx.shadowColor = shadow.color;

@@ -240,12 +240,12 @@
     }
 
     // identity matrix
-    var iMatrix = fabric.iMatrix,
+    var iMatrix = window.iMatrix,
 
         // == begin transform regexp
-        number = fabric.reNum,
+        number = window.reNum,
 
-        commaWsp = fabric.commaWsp,
+        commaWsp = window.commaWsp,
 
         skewX = '(?:(skewX)\\s*\\(\\s*(' + number + ')\\s*\\))',
 
@@ -486,7 +486,7 @@
           j,
           attrs,
           len,
-          namespace = fabric.svgNS;
+          namespace = window.svgNS;
 
       applyViewboxTransform(el2);
       if (/^svg$/i.test(el2.nodeName)) {
@@ -533,10 +533,10 @@
   // matches, e.g.: +14.56e-12, etc.
   var reViewBoxAttrValue = new RegExp(
     '^' +
-    '\\s*(' + fabric.reNum + '+)\\s*,?' +
-    '\\s*(' + fabric.reNum + '+)\\s*,?' +
-    '\\s*(' + fabric.reNum + '+)\\s*,?' +
-    '\\s*(' + fabric.reNum + '+)\\s*' +
+    '\\s*(' + window.reNum + '+)\\s*,?' +
+    '\\s*(' + window.reNum + '+)\\s*,?' +
+    '\\s*(' + window.reNum + '+)\\s*,?' +
+    '\\s*(' + window.reNum + '+)\\s*' +
     '$'
   );
 
@@ -650,7 +650,7 @@
     // seems unused.
     // parsedDim.viewboxTransform = fabric.parseTransformAttribute(matrix);
     if (element.nodeName === 'svg') {
-      el = element.ownerDocument.createElementNS(fabric.svgNS, 'g');
+      el = element.ownerDocument.createElementNS(window.svgNS, 'g');
       // element.firstChild != null
       while (element.firstChild) {
         el.appendChild(element.firstChild);
@@ -701,17 +701,6 @@
         descendants = fabric.util.toArray(doc.getElementsByTagName('*'));
     options.crossOrigin = parsingOptions && parsingOptions.crossOrigin;
     options.svgUid = svgUid;
-
-    if (descendants.length === 0 && fabric.isLikelyNode) {
-      // we're likely in node, where "o3-xml" library fails to gEBTN("*")
-      // https://github.com/ajaxorg/node-o3-xml/issues/21
-      descendants = doc.selectNodes('//*[name(.)!="svg"]');
-      var arr = [];
-      for (i = 0, len = descendants.length; i < len; i++) {
-        arr[i] = descendants[i];
-      }
-      descendants = arr;
-    }
 
     var elements = descendants.filter(function(el) {
       applyViewboxTransform(el);
@@ -770,8 +759,8 @@
   var reFontDeclaration = new RegExp(
     '(normal|italic)?\\s*(normal|small-caps)?\\s*' +
     '(normal|bold|bolder|lighter|100|200|300|400|500|600|700|800|900)?\\s*(' +
-      fabric.reNum +
-    '(?:px|cm|mm|em|pt|pc|in)*)(?:\\/(normal|' + fabric.reNum + '))?\\s+(.*)');
+      window.reNum +
+    '(?:px|cm|mm|em|pt|pc|in)*)(?:\\/(normal|' + window.reNum + '))?\\s+(.*)');
 
   extend(fabric, {
     /**

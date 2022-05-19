@@ -284,7 +284,7 @@
           index     = this._reSpace.test(text[selectionStart]) ? selectionStart - 1 : selectionStart,
           _char     = text[index],
           // wrong
-          reNonWord = fabric.reNonWord;
+          reNonWord = window.reNonWord;
 
       while (!reNonWord.test(_char) && index > 0 && index < text.length) {
         index += direction;

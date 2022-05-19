@@ -1,6 +1,6 @@
 {
   "name": "fabric",
-  "description": "Object model for HTML5 canvas, and SVG-to-canvas parser. Backed by jsdom and node-canvas.",
+  "description": "Object model for HTML5 canvas, and SVG-to-canvas parser.",
   "homepage": "http://fabricjs.com/",
   "version": "5.1.0",
   "author": "Juriy Zaytsev <kangax@gmail.com>",
@@ -35,13 +35,8 @@
     "xmldom": false,
     "url": false
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/fabricjs/fabric.js"
-  },
-  "bugs": {
-    "url": "https://github.com/fabricjs/fabric.js/issues"
-  },
+  "types": "./dist/index.d.ts",
+  "repository": "https://github.com/Cube-J/dm-fabric.js.git",
   "license": "MIT",
   "scripts": {
     "changelog": "auto-changelog -o change-output.md --unreleased-only",
@@ -59,10 +54,6 @@
     "all": "npm run build && npm run test -- --all && npm run lint && npm run lint_tests && npm run export",
     "testem": "testem .",
     "testem:ci": "testem ci"
-  },
-  "optionalDependencies": {
-    "canvas": "^2.8.0",
-    "jsdom": "^19.0.0"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
@@ -82,6 +73,7 @@
     "nyc": "^15.1.0",
     "pixelmatch": "^4.0.2",
     "qunit": "^2.17.2",
+    "rollup": "^2.74.0",
     "testem": "^3.2.0",
     "uglify-js": "^3.15.5"
   },

@@ -221,7 +221,7 @@
       var coords = clone(this.coords, true), i, len, options = options || {},
           markup, commonAttributes, colorStops = clone(this.colorStops, true),
           needsSwap = coords.r1 > coords.r2,
-          transform = this.gradientTransform ? this.gradientTransform.concat() : fabric.iMatrix.concat(),
+          transform = this.gradientTransform ? this.gradientTransform.concat() : window.iMatrix.concat(),
           offsetX = -this.offsetX, offsetY = -this.offsetY,
           withViewport = !!options.additionalTransform,
           gradientUnits = this.gradientUnits === 'pixels' ? 'userSpaceOnUse' : 'objectBoundingBox';
