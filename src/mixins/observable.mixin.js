@@ -1,3 +1,4 @@
+import { util } from '../util'
 /**
  * @private
  * @param {String} eventName
@@ -12,7 +13,7 @@ function _removeEventListener(eventName, handler) {
     eventListener[eventListener.indexOf(handler)] = false;
   }
   else {
-    fabric.util.array.fill(eventListener, false);
+    util.array.fill(eventListener, false);
   }
 }
 

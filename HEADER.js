@@ -150,10 +150,10 @@ window.cachesBoundsOfCurve = true;
  */
 window.forceGLPutImageData = false;
 
-window.initFilterBackend = function() {
+window.initFilterBackend = window.filterBackend = function() {
   if (window.enableGLFiltering && window.isWebglSupported && window.isWebglSupported(window.textureSize)) {
     console.log('max texture size: ' + window.maxTextureSize);
-    return (new fabric.WebglFilterBackend({ tileSize: window.textureSize }));
+    return (new window.WebglFilterBackend({ tileSize: window.textureSize }));
   }
   else if (fabric.Canvas2dFilterBackend) {
     return (new fabric.Canvas2dFilterBackend());

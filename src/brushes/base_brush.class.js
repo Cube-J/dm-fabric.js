@@ -1,9 +1,12 @@
+import { util } from '../util';
+import { Color } from '../color.class';
+
 /**
  * BaseBrush class
  * @class fabric.BaseBrush
  * @see {@link http://fabricjs.com/freedrawing|Freedrawing demo}
  */
-fabric.BaseBrush = fabric.util.createClass(/** @lends fabric.BaseBrush.prototype */ {
+export const BaseBrush = util.createClass(/** @lends fabric.BaseBrush.prototype */ {
 
   /**
    * Color of a brush
@@ -114,7 +117,7 @@ fabric.BaseBrush = fabric.util.createClass(/** @lends fabric.BaseBrush.prototype
   },
 
   needsFullRender: function() {
-    var color = new fabric.Color(this.color);
+    var color = new Color(this.color);
     return color.getAlpha() < 1 || !!this.shadow;
   },
 

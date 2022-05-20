@@ -1,15 +1,19 @@
+import { util } from "../util";
+import { PencilBrush } from "./pencil_brush.class";
+import { Pattern } from "../pattern.class";
+
 /**
  * PatternBrush class
  * @class fabric.PatternBrush
  * @extends fabric.BaseBrush
  */
-fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fabric.PatternBrush.prototype */ {
+export const PatternBrush = util.createClass(PencilBrush, /** @lends fabric.PatternBrush.prototype */ {
 
   getPatternSrc: function() {
 
     var dotWidth = 20,
         dotDistance = 5,
-        patternCanvas = fabric.util.createCanvasElement(),
+        patternCanvas = util.createCanvasElement(),
         patternCtx = patternCanvas.getContext('2d');
 
     patternCanvas.width = patternCanvas.height = dotWidth + dotDistance;
@@ -51,7 +55,7 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
     var path = this.callSuper('createPath', pathData),
         topLeft = path._getLeftTopCoords().scalarAdd(path.strokeWidth / 2);
 
-    path.stroke = new fabric.Pattern({
+    path.stroke = new Pattern({
       source: this.source || this.getPatternSrcFunction(),
       offsetX: -topLeft.x,
       offsetY: -topLeft.y

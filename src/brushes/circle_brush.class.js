@@ -1,8 +1,16 @@
+import { util } from '../util';
+import { BaseBrush } from './base_brush.class';
+import { Shadow } from '../shadow.class';
+import { Point } from '../point.class';
+import { Color } from '../color.class';
+import { Circle } from '../shapes/circle.class';
+import { Group } from '../shapes/group.class';
+
 /**
  * CircleBrush class
  * @class fabric.CircleBrush
  */
-fabric.CircleBrush = fabric.util.createClass(fabric.BaseBrush, /** @lends fabric.CircleBrush.prototype */ {
+export const CircleBrush = util.createClass(BaseBrush, /** @lends fabric.CircleBrush.prototype */ {
 
   /**
    * Width of a brush
@@ -94,7 +102,7 @@ fabric.CircleBrush = fabric.util.createClass(fabric.BaseBrush, /** @lends fabric
 
     for (i = 0, len = this.points.length; i < len; i++) {
       var point = this.points[i],
-          circle = new fabric.Circle({
+          circle = new Circle({
             radius: point.radius,
             left: point.x,
             top: point.y,
@@ -103,11 +111,11 @@ fabric.CircleBrush = fabric.util.createClass(fabric.BaseBrush, /** @lends fabric
             fill: point.fill
           });
 
-      this.shadow && (circle.shadow = new fabric.Shadow(this.shadow));
+      this.shadow && (circle.shadow = new Shadow(this.shadow));
 
       circles.push(circle);
     }
-    var group = new fabric.Group(circles);
+    var group = new Group(circles);
     group.canvas = this.canvas;
 
     this.canvas.fire('before:path:created', { path: group });
@@ -122,16 +130,16 @@ fabric.CircleBrush = fabric.util.createClass(fabric.BaseBrush, /** @lends fabric
 
   /**
    * @param {Object} pointer
-   * @return {fabric.Point} Just added pointer point
+   * @return {Point} Just added pointer point
    */
   addPoint: function(pointer) {
-    var pointerPoint = new fabric.Point(pointer.x, pointer.y),
+    var pointerPoint = new Point(pointer.x, pointer.y),
 
-        circleRadius = fabric.util.getRandomInt(
+        circleRadius = util.getRandomInt(
           Math.max(0, this.width - 20), this.width + 20) / 2,
 
-        circleColor = new fabric.Color(this.color)
-          .setAlpha(fabric.util.getRandomInt(0, 100) / 100)
+        circleColor = new Color(this.color)
+          .setAlpha(util.getRandomInt(0, 100) / 100)
           .toRgba();
 
     pointerPoint.radius = circleRadius;

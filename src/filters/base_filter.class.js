@@ -1,18 +1,13 @@
-/**
- * @namespace fabric.Image.filters
- * @memberOf fabric.Image
- * @tutorial {@link http://fabricjs.com/fabric-intro-part-2#image_filters}
- * @see {@link http://fabricjs.com/image-filters|ImageFilters demo}
- */
-fabric.Image = fabric.Image || { };
-fabric.Image.filters = fabric.Image.filters || { };
+import { Image } from '../shapes/image.class';
+import { util } from '../util';
+
 
 /**
  * Root filter class from which all filter classes inherit from
- * @class fabric.Image.filters.BaseFilter
- * @memberOf fabric.Image.filters
+ * @class Image.filters.BaseFilter
+ * @memberOf Image.filters
  */
-fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Image.filters.BaseFilter.prototype */ {
+const BaseFilter = util.createClass(/** @lends Image.filters.BaseFilter.prototype */ {
 
   /**
    * Filter type
@@ -70,10 +65,10 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   createProgram: function(gl, fragmentSource, vertexSource) {
     fragmentSource = fragmentSource || this.fragmentSource;
     vertexSource = vertexSource || this.vertexSource;
-    if (fabric.webGlPrecision !== 'highp'){
+    if (window.webGlPrecision !== 'highp'){
       fragmentSource = fragmentSource.replace(
         /precision highp float/g,
-        'precision ' + fabric.webGlPrecision + ' float'
+        'precision ' + window.webGlPrecision + ' float'
       );
     }
     var vertexShader = gl.createShader(gl.VERTEX_SHADER);
@@ -199,7 +194,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
    **/
   isNeutralState: function(/* options */) {
     var main = this.mainParameter,
-        _class = fabric.Image.filters[this.type].prototype;
+        _class = Image.filters[this.type].prototype;
     if (main) {
       if (Array.isArray(_class[main])) {
         for (var i = _class[main].length; i--;) {
@@ -359,8 +354,10 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
  * Create filter instance from an object representation
  * @static
  * @param {Object} object Object to create an instance from
- * @returns {Promise<fabric.Image.filters.BaseFilter>}
+ * @returns {Promise<Image.filters.BaseFilter>}
  */
-fabric.Image.filters.BaseFilter.fromObject = function(object) {
-  return Promise.resolve(new fabric.Image.filters[object.type](object));
+BaseFilter.fromObject = function(object) {
+  return Promise.resolve(new Image.filters[object.type](object));
 };
+
+export { BaseFilter };

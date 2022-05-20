@@ -1,8 +1,15 @@
+import { util } from '../util';
+import { BaseBrush } from './base_brush.class';
+import { Point } from '../point.class';
+import { Shadow } from '../shadow.class';
+import { Rect } from '../shapes/rect.class';
+import { Group } from '../shapes/group.class';
+
 /**
  * SprayBrush class
  * @class fabric.SprayBrush
  */
-fabric.SprayBrush = fabric.util.createClass( fabric.BaseBrush, /** @lends fabric.SprayBrush.prototype */ {
+export const SprayBrush = util.createClass(BaseBrush, /** @lends fabric.SprayBrush.prototype */ {
 
   /**
    * Width of a spray
@@ -95,7 +102,7 @@ fabric.SprayBrush = fabric.util.createClass( fabric.BaseBrush, /** @lends fabric
 
       for (var j = 0, jlen = sprayChunk.length; j < jlen; j++) {
 
-        var rect = new fabric.Rect({
+        var rect = new Rect({
           width: sprayChunk[j].width,
           height: sprayChunk[j].width,
           left: sprayChunk[j].x + 1,
@@ -112,13 +119,13 @@ fabric.SprayBrush = fabric.util.createClass( fabric.BaseBrush, /** @lends fabric
       rects = this._getOptimizedRects(rects);
     }
 
-    var group = new fabric.Group(rects, {
+    var group = new Group(rects, {
       objectCaching: true,
       layout: 'fixed',
       subTargetCheck: false,
       interactive: false
     });
-    this.shadow && group.set('shadow', new fabric.Shadow(this.shadow));
+    this.shadow && group.set('shadow', new Shadow(this.shadow));
     this.canvas.fire('before:path:created', { path: group });
     this.canvas.add(group);
     this.canvas.fire('path:created', { path: group });
@@ -196,11 +203,11 @@ fabric.SprayBrush = fabric.util.createClass( fabric.BaseBrush, /** @lends fabric
 
     for (i = 0; i < this.density; i++) {
 
-      x = fabric.util.getRandomInt(pointer.x - radius, pointer.x + radius);
-      y = fabric.util.getRandomInt(pointer.y - radius, pointer.y + radius);
+      x = util.getRandomInt(pointer.x - radius, pointer.x + radius);
+      y = util.getRandomInt(pointer.y - radius, pointer.y + radius);
 
       if (this.dotWidthVariance) {
-        width = fabric.util.getRandomInt(
+        width = util.getRandomInt(
           // bottom clamp width to 1
           Math.max(1, this.dotWidth - this.dotWidthVariance),
           this.dotWidth + this.dotWidthVariance);
@@ -209,11 +216,11 @@ fabric.SprayBrush = fabric.util.createClass( fabric.BaseBrush, /** @lends fabric
         width = this.dotWidth;
       }
 
-      var point = new fabric.Point(x, y);
+      var point = new Point(x, y);
       point.width = width;
 
       if (this.randomOpacity) {
-        point.opacity = fabric.util.getRandomInt(0, 100) / 100;
+        point.opacity = util.getRandomInt(0, 100) / 100;
       }
 
       this.sprayChunkPoints.push(point);

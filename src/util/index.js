@@ -1,8 +1,10 @@
-import { ease } from './anim_ease';
+// import { ease } from './anim_ease';
+import * as anim_ease from './anim_ease';
 import { animateColor } from './animate_color';
 import { animate, requestAnimFrame, cancelAnimFrame, runningAnimations } from './animate';
 import { addListener, removeListener, getPointer, isTouchEvent } from './dom_event';
 import { setImageSmoothing, getById, toArray, addClass, makeElement, wrapElement, getScrollLeftTop, getElementOffset, getNodeCanvas, cleanUpJsdomNode, makeElementUnselectable, makeElementSelectable } from './dom_misc';
+// import * as dom_misc from './dom_misc';
 import { request } from './dom_request';
 import { setStyle } from './dom_style';
 import { array } from './lang_array';
@@ -76,7 +78,8 @@ import { joinPath,
 import { Observable } from '../mixins/observable.mixin';
 
 const util = {
-  ease,
+  // ease,
+  ...anim_ease,
   animateColor,
   animate,
   requestAnimFrame,
@@ -101,6 +104,7 @@ const util = {
   setStyle,
   array,
   createClass,
+  object,
   string,
   cos,
   sin,
