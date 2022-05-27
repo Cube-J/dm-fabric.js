@@ -14,5 +14,5 @@ module.exports = {
       type: 'module',
     },
   },
-  devtool: 'source-map'
+  // devtool: 'source-map'
 };
