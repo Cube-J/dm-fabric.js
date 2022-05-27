@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>editable_polygon</title>
-    <script src="../dist/fabric.js"></script>
+    <!-- <script src="../dist/fabric.js"></script> -->
     <style>
       .controls {
         display: inline-block;
@@ -30,10 +30,13 @@
     </div>
   </body>
   <script type="module">
-    import * as A from "../dist/fabric.js";
-    console.log(A);
+  // <!-- <script> -->
+    import { fabric } from "../dist/webpack.js";
+    // console.log(A);
+    // console.log(A.fabric);
+    console.log(fabric);
     // Modify fabric.Canvas.getPointer to make the returned coordinates correct when canvas's object-fit is 'contain' or 'cover'.
-    DM.fabric.Canvas.prototype.getPointer = function (e, ignoreVpt) {
+    fabric.Canvas.prototype.getPointer = function (e, ignoreVpt) {
       // return cached values if we are in the event processing chain
       if (this._absolutePointer && !ignoreVpt) {
         return this._absolutePointer;
@@ -42,7 +45,7 @@
         return this._pointer;
       }
 
-      var pointer = DM.fabric.util.getPointer(e),
+      var pointer = fabric.util.getPointer(e),
           upperCanvasEl = this.upperCanvasEl,
           bounds = upperCanvasEl.getBoundingClientRect(),
           boundsWidth = bounds.width || 0,
@@ -165,7 +168,8 @@
     //   ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, baseCanvas.width, baseCanvas.height);
     // });
 
-    var canvas = (this.__canvas = new DM.fabric.Canvas("c", {enableRetinaScaling: false}));
+    // var canvas = (this.__canvas = new fabric.Canvas("c", {enableRetinaScaling: false}));
+    var canvas = (new fabric.Canvas("c", {enableRetinaScaling: false}));
     // canvas.enableRetinaScaling = false;
     canvas.setDimensions({width: "100%", height: "100%"}, {cssOnly: true});
     // document.querySelector(".canvas-container").style.width = "100%";
@@ -184,7 +188,7 @@
 
     redirectEvent("mousedown", maskCanvas, document.querySelector(".upper-canvas"));
 
-    var imgInstance = new DM.fabric.Image(image, {
+    var imgInstance = new fabric.Image(image, {
       left: 0,
       top: 0,
       angle: 0,
@@ -245,7 +249,7 @@
       }
     }
 
-    const rect = new DM.fabric.Rect({
+    const rect = new fabric.Rect({
       left: 100,
       top: 500,
       width: 1000,
@@ -276,7 +280,7 @@
         y: 300,
       },
     ];
-    var polygon = new DM.fabric.Polygon(points, {
+    var polygon = new fabric.Polygon(points, {
       left: 200,
       top: 0,
       fill: "transparent",
@@ -299,9 +303,9 @@
           fabricObject.points[this.pointIndex].x - fabricObject.pathOffset.x,
         y =
           fabricObject.points[this.pointIndex].y - fabricObject.pathOffset.y;
-      return DM.fabric.util.transformPoint(
+      return fabric.util.transformPoint(
         { x: x, y: y },
-        DM.fabric.util.multiplyTransformMatrices(
+        fabric.util.multiplyTransformMatrices(
           fabricObject.canvas.viewportTransform,
           fabricObject.calcTransformMatrix()
         )
@@ -309,11 +313,11 @@
     }
 
     function getObjectSizeWithStroke(object) {
-      var stroke = new DM.fabric.Point(
+      var stroke = new fabric.Point(
         object.strokeUniform ? 1 / object.scaleX : 1,
         object.strokeUniform ? 1 / object.scaleY : 1
       ).multiply(object.strokeWidth);
-      return new DM.fabric.Point(
+      return new fabric.Point(
         object.width + stroke.x,
         object.height + stroke.y
       );
@@ -329,7 +333,7 @@
       var polygon = transform.target,
         currentControl = polygon.controls[polygon.__corner],
         mouseLocalPosition = polygon.toLocalPoint(
-          new DM.fabric.Point(x, y),
+          new fabric.Point(x, y),
           "center",
           "center"
         ),
@@ -352,7 +356,7 @@
     function anchorWrapper(anchorIndex, fn) {
       return function (eventData, transform, x, y) {
         var fabricObject = transform.target,
-          absolutePoint = DM.fabric.util.transformPoint(
+          absolutePoint = fabric.util.transformPoint(
             {
               x:
                 fabricObject.points[anchorIndex].x -
@@ -394,7 +398,7 @@
         poly.cornerStyle = "circle";
         poly.cornerColor = "rgba(0,0,255,0.5)";
         poly.controls = poly.points.reduce(function (acc, point, index) {
-          acc["p" + index] = new DM.fabric.Control({
+          acc["p" + index] = new fabric.Control({
             positionHandler: polygonPositionHandler,
             actionHandler: anchorWrapper(
               index > 0 ? index - 1 : lastControl,
@@ -408,7 +412,7 @@
       } else {
         poly.cornerColor = "blue";
         poly.cornerStyle = "rect";
-        poly.controls = DM.fabric.Object.prototype.controls;
+        poly.controls = fabric.Object.prototype.controls;
       }
       poly.hasBorders = !poly.edit;
       canvas.requestRenderAll();

@@ -1,5 +1,5 @@
 ## dm-fabric.js
-Fabric.js package with es6 imports suppprted in browser. Not supported in Node.js.
+ES6 module of Fabric.js package. Not supported in Node.js.
 
 ## Fabric.js
 
