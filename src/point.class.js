@@ -9,7 +9,7 @@
  * @param {Number} y
  * @return {fabric.Point} thisArg
  */
-function Point(x, y) {
+const Point = function(x, y) {
   this.x = x;
   this.y = y;
 }

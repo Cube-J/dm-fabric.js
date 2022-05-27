@@ -1,32 +1,46 @@
-import { util } from '../util';
-import { BaseFilter } from "./base_filter.class";
-import { BlendColor } from "./blendcolor_filter.class";
-import { BlendImage } from "./blendimage_filter.class";
-import { Blur } from "./blur_filter.class";
-import { Brightness } from "./brightness_filter.class";
-import { ColorMatrix } from "./colormatrix_filter.class";
-import { Composed } from "./composed_filter.class";
-import { Contrast } from "./contrast_filter.class";
-import { Convolute } from "./convolute_filter.class";
-import { MyFilter } from "./filter_boilerplate";
-import { Gamma } from "./gamma_filter.class";
-import { Grayscale } from "./grayscale_filter.class";
-import { HueRotation } from "./hue_rotation.class";
-import { Invert } from "./invert_filter.class";
-import { Noise } from "./noise_filter.class";
-import { Pixelate } from "./pixelate_filter.class";
-import { RemoveColor } from "./removecolor_filter.class";
-import { Resize } from "./resize_filter.class";
-import { Saturation } from "./saturate_filter.class";
-import { Vibrance } from "./vibrance_filter.class";
-import './webgl_backend.class';
+import { util } from '../util/index.js';
+import { BaseFilter } from "./base_filter.class.js";
+import { BlendColor } from "./blendcolor_filter.class.js";
+import { BlendImage } from "./blendimage_filter.class.js";
+import { Blur } from "./blur_filter.class.js";
+import { Brightness } from "./brightness_filter.class.js";
+import { ColorMatrix } from "./colormatrix_filter.class.js";
+import { Composed } from "./composed_filter.class.js";
+import { Contrast } from "./contrast_filter.class.js";
+import { Convolute } from "./convolute_filter.class.js";
+import { MyFilter } from "./filter_boilerplate.js";
+import { Gamma } from "./gamma_filter.class.js";
+import { Grayscale } from "./grayscale_filter.class.js";
+import { HueRotation } from "./hue_rotation.class.js";
+import { Invert } from "./invert_filter.class.js";
+import { Noise } from "./noise_filter.class.js";
+import { Pixelate } from "./pixelate_filter.class.js";
+import { RemoveColor } from "./removecolor_filter.class.js";
+import { Resize } from "./resize_filter.class.js";
+import { Saturation } from "./saturate_filter.class.js";
+import { Vibrance } from "./vibrance_filter.class.js";
 
 const filters = {
   BaseFilter,
   BlendColor,
   BlendImage,
   Blur,
-
+  Brightness,
+  ColorMatrix,
+  Composed,
+  Contrast,
+  Convolute,
+  MyFilter,
+  Gamma,
+  Grayscale,
+  HueRotation,
+  Invert,
+  Noise,
+  Pixelate,
+  RemoveColor,
+  Resize,
+  Saturation,
+  Vibrance
 };
 
 var createClass = util.createClass;
@@ -110,4 +124,6 @@ for (var key in matrices) {
 }
 
 
-export { filters };
+export { 
+  filters
+};

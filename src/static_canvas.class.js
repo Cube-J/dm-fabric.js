@@ -1,5 +1,11 @@
-import { util } from "./util";
-import { Observable } from '../mixins/observable.mixin';
+import { util } from "./util/index.js";
+import { Observable } from './mixins/index.js';
+import { CommonMethods } from './mixins/shared_methods.mixin.js';
+import { Collection } from './mixins/collection.mixin.js';
+import { Point } from "./point.class.js";
+import { fabricObject } from "./shapes/object.class.js";
+import { devicePixelRatio, iMatrix } from "./header.js";
+import { version } from './version.js';
 
 // aliases for faster resolution
 var extend = util.object.extend,
@@ -15,7 +21,7 @@ var extend = util.object.extend,
 /**
  * Static canvas class
  * @class StaticCanvas
- * @mixes fabric.Collection
+ * @mixes Collection
  * @mixes Observable
  * @see {@link http://fabricjs.com/static_canvas|StaticCanvas demo}
  * @see {@link StaticCanvas#initialize} for constructor definition
@@ -26,7 +32,7 @@ var extend = util.object.extend,
  * @fires object:removed
  */
 // eslint-disable-next-line max-len
-const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /** @lends StaticCanvas.prototype */ {
+const StaticCanvas = util.createClass(CommonMethods, Collection, /** @lends StaticCanvas.prototype */ {
 
   /**
    * Constructor
@@ -92,7 +98,7 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
   stateful: false,
 
   /**
-   * Indicates whether {@link fabric.Collection.add}, {@link fabric.Collection.insertAt} and {@link fabric.Collection.remove},
+   * Indicates whether {@link Collection.add}, {@link Collection.insertAt} and {@link Collection.remove},
    * {@link StaticCanvas.moveTo}, {@link StaticCanvas.clear} and many more, should also re-render canvas.
    * Disabling this option will not give a performance boost when adding/removing a lot of objects to/from canvas at once
    * since the renders are quequed and executed one per frame.
@@ -133,7 +139,7 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
    * canvas.viewportTransform = [0.7, 0, 0, 0.7, 50, 50];
    * @default
    */
-  viewportTransform: window.iMatrix.concat(),
+  viewportTransform: iMatrix.concat(),
 
   /**
    * if set to false background image is not affected by viewport transform
@@ -186,7 +192,7 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
    * the clipPath object gets used when the canvas has rendered, and the context is placed in the
    * top left corner of the canvas.
    * clipPath will clip away controls, if you do not want this to happen use controlsAboveOverlay = true
-   * @type fabric.Object
+   * @type Object
    */
   clipPath: undefined,
 
@@ -210,7 +216,7 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
    * @private
    */
   _isRetinaScaling: function() {
-    return (window.devicePixelRatio > 1 && this.enableRetinaScaling);
+    return (devicePixelRatio > 1 && this.enableRetinaScaling);
   },
 
   /**
@@ -218,7 +224,7 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
    * @return {Number} retinaScaling if applied, otherwise 1;
    */
   getRetinaScaling: function() {
-    return this._isRetinaScaling() ? Math.max(1, window.devicePixelRatio) : 1;
+    return this._isRetinaScaling() ? Math.max(1, devicePixelRatio) : 1;
   },
 
   /**
@@ -228,7 +234,7 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
     if (!this._isRetinaScaling()) {
       return;
     }
-    var scaleRatio = window.devicePixelRatio;
+    var scaleRatio = devicePixelRatio;
     this.__initRetinaScaling(scaleRatio, this.lowerCanvasEl, this.contextContainer);
     if (this.upperCanvasEl) {
       this.__initRetinaScaling(scaleRatio, this.upperCanvasEl, this.contextTop);
@@ -495,7 +501,7 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
    * meaning that following zoom to point with the same point will have the visual
    * effect of the zoom originating from that point. The point won't move.
    * It has nothing to do with canvas center or visual center of the viewport.
-   * @param {fabric.Point} point to zoom with respect to
+   * @param {Point} point to zoom with respect to
    * @param {Number} value to set zoom to, less than 1 zooms out
    * @return {fabric.Canvas} instance
    * @chainable true
@@ -519,13 +525,13 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
    * @chainable true
    */
   setZoom: function (value) {
-    this.zoomToPoint(new fabric.Point(0, 0), value);
+    this.zoomToPoint(new Point(0, 0), value);
     return this;
   },
 
   /**
    * Pan viewport so as to place point at top left corner of canvas
-   * @param {fabric.Point} point to move to
+   * @param {Point} point to move to
    * @return {fabric.Canvas} instance
    * @chainable true
    */
@@ -538,12 +544,12 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
 
   /**
    * Pans viewpoint relatively
-   * @param {fabric.Point} point (position vector) to move by
+   * @param {Point} point (position vector) to move by
    * @return {fabric.Canvas} instance
    * @chainable true
    */
   relativePan: function (point) {
-    return this.absolutePan(new fabric.Point(
+    return this.absolutePan(new Point(
       -point.x - this.viewportTransform[4],
       -point.y - this.viewportTransform[5]
     ));
@@ -558,45 +564,45 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
   },
 
   /**
-   * @param {...fabric.Object} objects to add
+   * @param {...Object} objects to add
    * @return {Self} thisArg
    * @chainable
    */
   add: function () {
-    fabric.Collection.add.call(this, arguments, this._onObjectAdded);
+    Collection.add.call(this, arguments, this._onObjectAdded);
     arguments.length > 0 && this.renderOnAddRemove && this.requestRenderAll();
     return this;
   },
 
   /**
    * Inserts an object into collection at specified index, then renders canvas (if `renderOnAddRemove` is not `false`)
-   * An object should be an instance of (or inherit from) fabric.Object
-   * @param {fabric.Object|fabric.Object[]} objects Object(s) to insert
+   * An object should be an instance of (or inherit from) Object
+   * @param {Object|Object[]} objects Object(s) to insert
    * @param {Number} index Index to insert object at
    * @param {Boolean} nonSplicing When `true`, no splicing (shifting) of objects occurs
    * @return {Self} thisArg
    * @chainable
    */
   insertAt: function (objects, index) {
-    fabric.Collection.insertAt.call(this, objects, index, this._onObjectAdded);
+    Collection.insertAt.call(this, objects, index, this._onObjectAdded);
     this.renderOnAddRemove && this.requestRenderAll();
     return this;
   },
 
   /**
-   * @param {...fabric.Object} objects to remove
+   * @param {...Object} objects to remove
    * @return {Self} thisArg
    * @chainable
    */
   remove: function () {
-    var removed = fabric.Collection.remove.call(this, arguments, this._onObjectRemoved);
+    var removed = Collection.remove.call(this, arguments, this._onObjectRemoved);
     removed.length > 0 && this.renderOnAddRemove && this.requestRenderAll();
     return this;
   },
 
   /**
    * @private
-   * @param {fabric.Object} obj Object that was added
+   * @param {Object} obj Object that was added
    */
   _onObjectAdded: function(obj) {
     this.stateful && obj.setupState();
@@ -615,7 +621,7 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
 
   /**
    * @private
-   * @param {fabric.Object} obj Object that was removed
+   * @param {Object} obj Object that was removed
    */
   _onObjectRemoved: function(obj) {
     this.fire('object:removed', { target: obj });
@@ -716,8 +722,8 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
         iVpt = invertTransform(this.viewportTransform);
     points.tl = transformPoint({ x: 0, y: 0 }, iVpt);
     points.br = transformPoint({ x: width, y: height }, iVpt);
-    points.tr = new fabric.Point(points.br.x, points.tl.y);
-    points.bl = new fabric.Point(points.tl.x, points.br.y);
+    points.tr = new Point(points.br.x, points.tl.y);
+    points.bl = new Point(points.tl.x, points.br.y);
     this.vptCoords = points;
     return points;
   },
@@ -869,34 +875,34 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
 
   /**
    * Returns coordinates of a center of canvas.
-   * @return {fabric.Point}
+   * @return {Point}
    */
   getCenterPoint: function () {
-    return new fabric.Point(this.width / 2, this.height / 2);
+    return new Point(this.width / 2, this.height / 2);
   },
 
   /**
    * Centers object horizontally in the canvas
-   * @param {fabric.Object} object Object to center horizontally
+   * @param {Object} object Object to center horizontally
    * @return {fabric.Canvas} thisArg
    */
   centerObjectH: function (object) {
-    return this._centerObject(object, new fabric.Point(this.getCenterPoint().x, object.getCenterPoint().y));
+    return this._centerObject(object, new Point(this.getCenterPoint().x, object.getCenterPoint().y));
   },
 
   /**
    * Centers object vertically in the canvas
-   * @param {fabric.Object} object Object to center vertically
+   * @param {Object} object Object to center vertically
    * @return {fabric.Canvas} thisArg
    * @chainable
    */
   centerObjectV: function (object) {
-    return this._centerObject(object, new fabric.Point(object.getCenterPoint().x, this.getCenterPoint().y));
+    return this._centerObject(object, new Point(object.getCenterPoint().x, this.getCenterPoint().y));
   },
 
   /**
    * Centers object vertically and horizontally in the canvas
-   * @param {fabric.Object} object Object to center vertically and horizontally
+   * @param {Object} object Object to center vertically and horizontally
    * @return {fabric.Canvas} thisArg
    * @chainable
    */
@@ -907,7 +913,7 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
 
   /**
    * Centers object vertically and horizontally in the viewport
-   * @param {fabric.Object} object Object to center vertically and horizontally
+   * @param {Object} object Object to center vertically and horizontally
    * @return {fabric.Canvas} thisArg
    * @chainable
    */
@@ -918,31 +924,31 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
 
   /**
    * Centers object horizontally in the viewport, object.top is unchanged
-   * @param {fabric.Object} object Object to center vertically and horizontally
+   * @param {Object} object Object to center vertically and horizontally
    * @return {fabric.Canvas} thisArg
    * @chainable
    */
   viewportCenterObjectH: function(object) {
     var vpCenter = this.getVpCenter();
-    this._centerObject(object, new fabric.Point(vpCenter.x, object.getCenterPoint().y));
+    this._centerObject(object, new Point(vpCenter.x, object.getCenterPoint().y));
     return this;
   },
 
   /**
    * Centers object Vertically in the viewport, object.top is unchanged
-   * @param {fabric.Object} object Object to center vertically and horizontally
+   * @param {Object} object Object to center vertically and horizontally
    * @return {fabric.Canvas} thisArg
    * @chainable
    */
   viewportCenterObjectV: function(object) {
     var vpCenter = this.getVpCenter();
 
-    return this._centerObject(object, new fabric.Point(object.getCenterPoint().x, vpCenter.y));
+    return this._centerObject(object, new Point(object.getCenterPoint().x, vpCenter.y));
   },
 
   /**
    * Calculate the point in canvas that correspond to the center of actual viewport.
-   * @return {fabric.Point} vpCenter, viewport center
+   * @return {Point} vpCenter, viewport center
    * @chainable
    */
   getVpCenter: function() {
@@ -953,8 +959,8 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
 
   /**
    * @private
-   * @param {fabric.Object} object Object to center
-   * @param {fabric.Point} center Center point
+   * @param {Object} object Object to center
+   * @param {Point} center Center point
    * @return {fabric.Canvas} thisArg
    * @chainable
    */
@@ -998,7 +1004,7 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
   _toObjectMethod: function (methodName, propertiesToInclude) {
 
     var clipPath = this.clipPath, data = {
-      version: fabric.version,
+      version: version,
       objects: this._toObjects(methodName, propertiesToInclude),
     };
     if (clipPath && !clipPath.excludeFromExport) {
@@ -1166,7 +1172,7 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
     var width = options.width || this.width,
         height = options.height || this.height,
         vpt, viewBox = 'viewBox="0 0 ' + this.width + ' ' + this.height + '" ',
-        NUM_FRACTION_DIGITS = fabric.Object.NUM_FRACTION_DIGITS;
+        NUM_FRACTION_DIGITS = fabricObject.NUM_FRACTION_DIGITS;
 
     if (options.viewBox) {
       viewBox = 'viewBox="' +
@@ -1195,7 +1201,7 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
       'height="', height, '" ',
       viewBox,
       'xml:space="preserve">\n',
-      '<desc>Created with Fabric.js ', fabric.version, '</desc>\n',
+      '<desc>Created with Fabric.js ', version, '</desc>\n',
       '<defs>\n',
       this.createSVGFontFacesMarkup(),
       this.createSVGRefElementsMarkup(),
@@ -1207,7 +1213,7 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
   createSVGClipPathMarkup: function(options) {
     var clipPath = this.clipPath;
     if (clipPath) {
-      clipPath.clipPathId = 'CLIPPATH_' + fabric.Object.__uid++;
+      clipPath.clipPathId = 'CLIPPATH_' + fabricObject.__uid++;
       return  '<clipPath id="' + clipPath.clipPathId + '" >\n' +
         this.clipPath.toClipPathSVG(options.reviver) +
         '</clipPath>\n';
@@ -1247,8 +1253,7 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
    */
   createSVGFontFacesMarkup: function() {
     var markup = '', fontList = { }, obj, fontFamily,
-        style, row, rowIndex, _char, charIndex, i, len,
-        fontPaths = window.fontPaths, objects = [];
+        style, row, rowIndex, _char, charIndex, i, len, objects = [];
 
     this._objects.forEach(function add(object) {
       objects.push(object);
@@ -1373,7 +1378,7 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
   /**
    * Moves an object or the objects of a multiple selection
    * to the bottom of the stack of drawn objects
-   * @param {fabric.Object} object Object to send to back
+   * @param {Object} object Object to send to back
    * @return {fabric.Canvas} thisArg
    * @chainable
    */
@@ -1402,7 +1407,7 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
   /**
    * Moves an object or the objects of a multiple selection
    * to the top of the stack of drawn objects
-   * @param {fabric.Object} object Object to send
+   * @param {Object} object Object to send
    * @return {fabric.Canvas} thisArg
    * @chainable
    */
@@ -1434,7 +1439,7 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
    * the first intersecting object. Where intersection is calculated with
    * bounding box. If no intersection is found, there will not be change in the
    * stack.
-   * @param {fabric.Object} object Object to send
+   * @param {Object} object Object to send
    * @param {Boolean} [intersecting] If `true`, send object behind next lower intersecting object
    * @return {fabric.Canvas} thisArg
    * @chainable
@@ -1507,7 +1512,7 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
    * of the first intersecting object. Where intersection is calculated with
    * bounding box. If no intersection is found, there will not be change in the
    * stack.
-   * @param {fabric.Object} object Object to send
+   * @param {Object} object Object to send
    * @param {Boolean} [intersecting] If `true`, send object in front of next upper intersecting object
    * @return {fabric.Canvas} thisArg
    * @chainable
@@ -1576,7 +1581,7 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
 
   /**
    * Moves an object to specified level in stack of drawn objects
-   * @param {fabric.Object} object Object to send
+   * @param {Object} object Object to send
    * @param {Number} index Position to move to
    * @return {fabric.Canvas} thisArg
    * @chainable
@@ -1638,7 +1643,7 @@ const StaticCanvas = util.createClass(fabric.CommonMethods, fabric.Collection, /
 });
 
 extend(StaticCanvas.prototype, Observable);
-extend(StaticCanvas.prototype, fabric.DataURLExporter);
+// extend(StaticCanvas.prototype, fabric.DataURLExporter);
 
 extend(StaticCanvas, /** @lends StaticCanvas */ {
 

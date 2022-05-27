@@ -1,4 +1,9 @@
-fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.prototype */ {
+import { util } from "../util/index.js";
+import { IText } from "../shapes/itext.class.js";
+
+let copiedText, disableStyleCopyPaste, copiedTextStyle;
+
+util.object.extend(IText.prototype, /** @lends IText.prototype */ {
 
   /**
    * Initializes hidden textarea (needed to bring up keyboard in iOS)
@@ -25,19 +30,19 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
       document.body.appendChild(this.hiddenTextarea);
     }
 
-    fabric.util.addListener(this.hiddenTextarea, 'blur', this.blur.bind(this));
-    fabric.util.addListener(this.hiddenTextarea, 'keydown', this.onKeyDown.bind(this));
-    fabric.util.addListener(this.hiddenTextarea, 'keyup', this.onKeyUp.bind(this));
-    fabric.util.addListener(this.hiddenTextarea, 'input', this.onInput.bind(this));
-    fabric.util.addListener(this.hiddenTextarea, 'copy', this.copy.bind(this));
-    fabric.util.addListener(this.hiddenTextarea, 'cut', this.copy.bind(this));
-    fabric.util.addListener(this.hiddenTextarea, 'paste', this.paste.bind(this));
-    fabric.util.addListener(this.hiddenTextarea, 'compositionstart', this.onCompositionStart.bind(this));
-    fabric.util.addListener(this.hiddenTextarea, 'compositionupdate', this.onCompositionUpdate.bind(this));
-    fabric.util.addListener(this.hiddenTextarea, 'compositionend', this.onCompositionEnd.bind(this));
+    util.addListener(this.hiddenTextarea, 'blur', this.blur.bind(this));
+    util.addListener(this.hiddenTextarea, 'keydown', this.onKeyDown.bind(this));
+    util.addListener(this.hiddenTextarea, 'keyup', this.onKeyUp.bind(this));
+    util.addListener(this.hiddenTextarea, 'input', this.onInput.bind(this));
+    util.addListener(this.hiddenTextarea, 'copy', this.copy.bind(this));
+    util.addListener(this.hiddenTextarea, 'cut', this.copy.bind(this));
+    util.addListener(this.hiddenTextarea, 'paste', this.paste.bind(this));
+    util.addListener(this.hiddenTextarea, 'compositionstart', this.onCompositionStart.bind(this));
+    util.addListener(this.hiddenTextarea, 'compositionupdate', this.onCompositionUpdate.bind(this));
+    util.addListener(this.hiddenTextarea, 'compositionend', this.onCompositionEnd.bind(this));
 
     if (!this._clickHandlerInitialized && this.canvas) {
-      fabric.util.addListener(this.canvas.upperCanvasEl, 'click', this.onClick.bind(this));
+      util.addListener(this.canvas.upperCanvasEl, 'click', this.onClick.bind(this));
       this._clickHandlerInitialized = true;
     }
   },
@@ -50,7 +55,7 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
    * your prototype.
    * the map change will affect all Instances unless you need for only some text Instances
    * in that case you have to clone this object and assign your Instance.
-   * this.keysMap = fabric.util.object.clone(this.keysMap);
+   * this.keysMap = util.object.clone(this.keysMap);
    * The function must be in fabric.Itext.prototype.myFunction And will receive event as args[0]
    */
   keysMap: {
@@ -240,8 +245,8 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
       this.removeStyleFromTo(removeFrom, removeTo);
     }
     if (insertedText.length) {
-      if (fromPaste && insertedText.join('') === fabric.copiedText && !window.disableStyleCopyPaste) {
-        copiedStyle = fabric.copiedTextStyle;
+      if (fromPaste && insertedText.join('') === copiedText && !disableStyleCopyPaste) {
+        copiedStyle = copiedTextStyle;
       }
       this.insertNewStyleBlock(insertedText, selectionStart, copiedStyle);
     }
@@ -285,12 +290,12 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
       return;
     }
 
-    fabric.copiedText = this.getSelectedText();
-    if (!window.disableStyleCopyPaste) {
-      fabric.copiedTextStyle = this.getSelectionStyles(this.selectionStart, this.selectionEnd, true);
+    copiedText = this.getSelectedText();
+    if (!disableStyleCopyPaste) {
+      copiedTextStyle = this.getSelectionStyles(this.selectionStart, this.selectionEnd, true);
     }
     else {
-      fabric.copiedTextStyle = null;
+      copiedTextStyle = null;
     }
     this._copyDone = true;
   },
@@ -309,7 +314,7 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
    * @return {Object} Clipboard data object
    */
   _getClipboardData: function(e) {
-    return (e && e.clipboardData) || fabric.window.clipboardData;
+    return (e && e.clipboardData) || window.clipboardData;
   },
 
   /**

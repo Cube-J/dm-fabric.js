@@ -1,24 +1,19 @@
-import { filters } from '../filters';
+import { filters } from '../filters/index.js';
+import { util } from '../util/index.js';
+import { fabricObject } from "./object.class.js";
+import { initFilterBackend, SHARED_ATTRIBUTES } from "../header.js";
+import { fabric } from '../index.js';
 
-var extend = fabric.util.object.extend;
-
-if (!global.fabric) {
-  global.fabric = { };
-}
-
-if (global.Image) {
-  fabric.warn('Image is already defined.');
-  return;
-}
+var extend = util.object.extend;
 
 /**
  * Image class
  * @class Image
- * @extends fabric.Object
+ * @extends fabricObject
  * @tutorial {@link http://fabricjs.com/fabric-intro-part-1#images}
  * @see {@link Image#initialize} for constructor definition
  */
-const Image = fabric.util.createClass(fabric.Object, /** @lends Image.prototype */ {
+const Image = util.createClass(fabricObject, /** @lends Image.prototype */ {
 
   /**
    * Type of an object
@@ -84,11 +79,11 @@ const Image = fabric.util.createClass(fabric.Object, /** @lends Image.prototype 
 
   /**
    * List of properties to consider when checking if
-   * state of an object is changed ({@link fabric.Object#hasStateChanged})
+   * state of an object is changed ({@link fabricObject#hasStateChanged})
    * as well as for history (undo/redo) purposes
    * @type Array
    */
-  stateProperties: fabric.Object.prototype.stateProperties.concat('cropX', 'cropY'),
+  stateProperties: fabricObject.prototype.stateProperties.concat('cropX', 'cropY'),
 
   /**
    * List of properties to consider when checking if cache needs refresh
@@ -97,7 +92,7 @@ const Image = fabric.util.createClass(fabric.Object, /** @lends Image.prototype 
    * and refreshed at the next render
    * @type Array
    */
-  cacheProperties: fabric.Object.prototype.cacheProperties.concat('cropX', 'cropY'),
+  cacheProperties: fabricObject.prototype.cacheProperties.concat('cropX', 'cropY'),
 
   /**
    * key used to retrieve the texture representing this image
@@ -145,7 +140,7 @@ const Image = fabric.util.createClass(fabric.Object, /** @lends Image.prototype 
   initialize: function(element, options) {
     options || (options = { });
     this.filters = [];
-    this.cacheKey = 'texture' + fabric.Object.__uid++;
+    this.cacheKey = 'texture' + fabricObject.__uid++;
     this.callSuper('initialize', options);
     this._initElement(element, options);
   },
@@ -205,7 +200,7 @@ const Image = fabric.util.createClass(fabric.Object, /** @lends Image.prototype 
     this.removeTexture(this.cacheKey + '_filtered');
     this._cacheContext = undefined;
     ['_originalElement', '_element', '_filteredEl', '_cacheCanvas'].forEach((function(element) {
-      fabric.util.cleanUpJsdomNode(this[element]);
+      util.cleanUpJsdomNode(this[element]);
       this[element] = undefined;
     }).bind(this));
   },
@@ -296,7 +291,7 @@ const Image = fabric.util.createClass(fabric.Object, /** @lends Image.prototype 
       return [];
     }
     if (this.hasCrop()) {
-      var clipPathId = fabric.Object.__uid++;
+      var clipPathId = fabricObject.__uid++;
       svgString.push(
         '<clipPath id="imageCrop_' + clipPathId + '">\n',
         '\t<rect x="' + x + '" y="' + y + '" width="' + this.width + '" height="' + this.height + '" />\n',
@@ -374,7 +369,7 @@ const Image = fabric.util.createClass(fabric.Object, /** @lends Image.prototype 
    */
   setSrc: function(src, options) {
     var _this = this;
-    return fabric.util.loadImage(src, options).then(function(img) {
+    return util.loadImage(src, options).then(function(img) {
       _this.setElement(img, options);
       _this._setWidthHeight();
       return _this;
@@ -408,9 +403,9 @@ const Image = fabric.util.createClass(fabric.Object, /** @lends Image.prototype 
       return;
     }
     if (!window.filterBackend) {
-      window.filterBackend = window.initFilterBackend();
+      window.filterBackend = initFilterBackend();
     }
-    var canvasEl = fabric.util.createCanvasElement(),
+    var canvasEl = util.createCanvasElement(),
         cacheKey = this._filteredEl ? (this.cacheKey + '_filtered') : this.cacheKey,
         sourceWidth = elementToFilter.width, sourceHeight = elementToFilter.height;
     canvasEl.width = sourceWidth;
@@ -455,7 +450,7 @@ const Image = fabric.util.createClass(fabric.Object, /** @lends Image.prototype 
 
     if (this._element === this._originalElement) {
       // if the element is the same we need to create a new element
-      var canvasEl = fabric.util.createCanvasElement();
+      var canvasEl = util.createCanvasElement();
       canvasEl.width = sourceWidth;
       canvasEl.height = sourceHeight;
       this._element = canvasEl;
@@ -471,7 +466,7 @@ const Image = fabric.util.createClass(fabric.Object, /** @lends Image.prototype 
       this._lastScaleY = 1;
     }
     if (!window.filterBackend) {
-      window.filterBackend = window.initFilterBackend();
+      window.filterBackend = initFilterBackend();
     }
     window.filterBackend.applyFilters(
       filters, this._originalElement, sourceWidth, sourceHeight, this._element, this.cacheKey);
@@ -488,7 +483,7 @@ const Image = fabric.util.createClass(fabric.Object, /** @lends Image.prototype 
    * @param {CanvasRenderingContext2D} ctx Context to render on
    */
   _render: function(ctx) {
-    fabric.util.setImageSmoothing(ctx, this.imageSmoothing);
+    util.setImageSmoothing(ctx, this.imageSmoothing);
     if (this.isMoving !== true && this.resizeFilter && this._needsResize()) {
       this.applyResizeFilters();
     }
@@ -502,8 +497,8 @@ const Image = fabric.util.createClass(fabric.Object, /** @lends Image.prototype 
    * @param {CanvasRenderingContext2D} ctx Context to render on
    */
   drawCacheOnCanvas: function(ctx) {
-    fabric.util.setImageSmoothing(ctx, this.imageSmoothing);
-    fabric.Object.prototype.drawCacheOnCanvas.call(this, ctx);
+    util.setImageSmoothing(ctx, this.imageSmoothing);
+    fabricObject.prototype.drawCacheOnCanvas.call(this, ctx);
   },
 
   /**
@@ -568,8 +563,8 @@ const Image = fabric.util.createClass(fabric.Object, /** @lends Image.prototype 
    * @param {Object} [options] Options object
    */
   _initElement: function(element, options) {
-    this.setElement(fabric.util.getById(element), options);
-    fabric.util.addClass(this.getElement(), Image.CSS_CANVAS);
+    this.setElement(util.getById(element), options);
+    util.addClass(this.getElement(), Image.CSS_CANVAS);
   },
 
   /**
@@ -602,13 +597,13 @@ const Image = fabric.util.createClass(fabric.Object, /** @lends Image.prototype 
    * @return {Object}
    */
   parsePreserveAspectRatioAttribute: function() {
-    var pAR = fabric.util.parsePreserveAspectRatioAttribute(this.preserveAspectRatio || ''),
+    var pAR = util.parsePreserveAspectRatioAttribute(this.preserveAspectRatio || ''),
         rWidth = this._element.width, rHeight = this._element.height,
         scaleX = 1, scaleY = 1, offsetLeft = 0, offsetTop = 0, cropX = 0, cropY = 0,
         offset, pWidth = this.width, pHeight = this.height, parsedAttributes = { width: pWidth, height: pHeight };
     if (pAR && (pAR.alignX !== 'none' || pAR.alignY !== 'none')) {
       if (pAR.meetOrSlice === 'meet') {
-        scaleX = scaleY = fabric.util.findScaleToFit(this._element, parsedAttributes);
+        scaleX = scaleY = util.findScaleToFit(this._element, parsedAttributes);
         offset = (pWidth - rWidth * scaleX) / 2;
         if (pAR.alignX === 'Min') {
           offsetLeft = -offset;
@@ -625,7 +620,7 @@ const Image = fabric.util.createClass(fabric.Object, /** @lends Image.prototype 
         }
       }
       if (pAR.meetOrSlice === 'slice') {
-        scaleX = scaleY = fabric.util.findScaleToCover(this._element, parsedAttributes);
+        scaleX = scaleY = util.findScaleToCover(this._element, parsedAttributes);
         offset = rWidth - pWidth / scaleX;
         if (pAR.alignX === 'Mid') {
           cropX = offset / 2;
@@ -682,17 +677,17 @@ Image.prototype.getSvgSrc = Image.prototype.getSrc;
  * @returns {Promise<Image>}
  */
 Image.fromObject = function(_object) {
-  var object = fabric.util.object.clone(_object),
+  var object = util.object.clone(_object),
       filters = object.filters,
       resizeFilter = object.resizeFilter;
   // the generic enliving will fail on filters for now
   delete object.resizeFilter;
   delete object.filters;
   return Promise.all([
-    fabric.util.loadImage(object.src, { crossOrigin: _object.crossOrigin }),
-    filters && fabric.util.enlivenObjects(filters,  'Image.filters'),
-    resizeFilter && fabric.util.enlivenObjects([resizeFilter],  'Image.filters'),
-    fabric.util.enlivenObjectEnlivables(object),
+    util.loadImage(object.src, { crossOrigin: _object.crossOrigin }),
+    filters && util.enlivenObjects(filters,  'Image.filters'),
+    resizeFilter && util.enlivenObjects([resizeFilter],  'Image.filters'),
+    util.enlivenObjectEnlivables(object),
   ])
     .then(function(imgAndFilters) {
       object.filters = imgAndFilters[1] || [];
@@ -709,7 +704,7 @@ Image.fromObject = function(_object) {
  * @returns {Promise<Image>}
  */
 Image.fromURL = function(url, imgOptions) {
-  return fabric.util.loadImage(url, imgOptions || {}).then(function(img) {
+  return util.loadImage(url, imgOptions || {}).then(function(img) {
     return new Image(img, imgOptions);
   });
 };
@@ -721,7 +716,7 @@ Image.fromURL = function(url, imgOptions) {
  * @see {@link http://www.w3.org/TR/SVG/struct.html#ImageElement}
  */
 Image.ATTRIBUTE_NAMES =
-  window.SHARED_ATTRIBUTES.concat(
+  SHARED_ATTRIBUTES.concat(
     'x y width height preserveAspectRatio xlink:href crossOrigin image-rendering'.split(' ')
   );
 

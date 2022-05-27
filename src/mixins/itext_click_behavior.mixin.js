@@ -1,4 +1,7 @@
-fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.prototype */ {
+import { util } from '../util/index.js';
+import { IText } from "../shapes/itext.class.js";
+
+util.object.extend(IText.prototype, /** @lends IText.prototype */ {
   /**
    * Initializes "dbclick" event handler
    */

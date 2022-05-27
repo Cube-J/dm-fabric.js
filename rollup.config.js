@@ -7,13 +7,13 @@ export default async(commandLineArgs)=>{
   
   return [
     {
-      input: "src/howler.core.js",
+      input: "src/index.js",
       output: [
         // index.mjs
         // for rollup/webpack to compile together with other
         // or use in <script type="module">
         {
-          file: "dist/index.mjs",
+          file: "dist/fabric.mjs",
           format: "es",
           exports: "named",
           sourcemap: true,
@@ -21,11 +21,19 @@ export default async(commandLineArgs)=>{
             { 
               // https://rollupjs.org/guide/en/#writebundle
               async writeBundle(options, bundle){
-                await fs.copyFile('./types/index.d.ts', './dist/index.d.ts');
-                await fs.copyFile('./dist/index.mjs', './dist/index.esm.js');
+                await fs.copyFile('./src/types/index.d.ts', './dist/index.d.ts');
+                await fs.copyFile('./src/types/fabric-impl.d.ts', './dist/fabric-impl.d.ts');
+                await fs.copyFile('./dist/fabric.mjs', './dist/fabric.esm.js');
               }
             },
           ],
+        },
+        {
+          file: "dist/fabric.js",
+          format: "umd",
+          name: "DM",
+          exports: "named",
+          sourcemap: true,
         },
       ],
     },

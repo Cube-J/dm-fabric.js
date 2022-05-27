@@ -1,6 +1,6 @@
-import { util } from './util';
-import { object } from './shapes/object.class';
-import { Color } from './color.class';
+import { util } from "./util/index.js";
+import { fabricObject } from './shapes/object.class.js';
+import { Color } from './color.class.js';
 
 /**
  * Shadow class
@@ -8,7 +8,7 @@ import { Color } from './color.class';
  * @see {@link http://fabricjs.com/shadows|Shadow demo}
  * @see {@link Shadow#initialize} for constructor definition
  */
-export const Shadow = util.createClass(/** @lends Shadow.prototype */ {
+const Shadow = util.createClass(/** @lends Shadow.prototype */ {
 
   /**
    * Shadow color
@@ -75,7 +75,7 @@ export const Shadow = util.createClass(/** @lends Shadow.prototype */ {
       this[prop] = options[prop];
     }
 
-    this.id = Object.__uid++;
+    this.id = fabricObject.__uid++;
   },
 
   /**
@@ -112,7 +112,7 @@ export const Shadow = util.createClass(/** @lends Shadow.prototype */ {
    * @return {String} SVG representation of a shadow
    */
   toSVG: function(object) {
-    var fBoxX = 40, fBoxY = 40, NUM_FRACTION_DIGITS = Object.NUM_FRACTION_DIGITS,
+    var fBoxX = 40, fBoxY = 40, NUM_FRACTION_DIGITS = fabricObject.NUM_FRACTION_DIGITS,
         offset = util.rotateVector(
           { x: this.offsetX, y: this.offsetY },
           util.degreesToRadians(-object.angle)),
@@ -183,3 +183,5 @@ export const Shadow = util.createClass(/** @lends Shadow.prototype */ {
  */
 // eslint-disable-next-line max-len
 Shadow.reOffsetsAndBlur = /(?:\s|^)(-?\d+(?:\.\d*)?(?:px)?(?:\s?|$))?(-?\d+(?:\.\d*)?(?:px)?(?:\s?|$))?(\d+(?:\.\d*)?(?:px)?)?(?:\s?|$)(?:$|\s)/;
+
+export { Shadow };

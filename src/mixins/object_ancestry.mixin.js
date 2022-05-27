@@ -1,9 +1,13 @@
-fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prototype */ {
+import { util } from "../util/index.js";
+import { fabricObject } from "../shapes/object.class.js";
+import { StaticCanvas } from "../static_canvas.class.js";
+
+util.object.extend(fabricObject.prototype, /** @lends fabricObject.prototype */ {
 
   /**
    * Checks if object is decendant of target
    * Should be used instead of @link {fabric.Collection.contains} for performance reasons
-   * @param {fabric.Object|fabric.StaticCanvas} target
+   * @param {fabricObject|StaticCanvas} target
    * @returns {boolean}
    */
   isDescendantOf: function (target) {
@@ -12,7 +16,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
       if (target === parent) {
         return true;
       }
-      else if (parent instanceof fabric.StaticCanvas) {
+      else if (parent instanceof StaticCanvas) {
         //  happens after all parents were traversed through without a match
         return false;
       }
@@ -23,7 +27,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
 
   /**
    *
-   * @typedef {fabric.Object[] | [...fabric.Object[], fabric.StaticCanvas]} Ancestors
+   * @typedef {fabricObject[] | [...fabricObject[], StaticCanvas]} Ancestors
    *
    * @param {boolean} [strict] returns only ancestors that are objects (without canvas)
    * @returns {Ancestors} ancestors from bottom to top
@@ -46,7 +50,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
    * @property {Ancestors} fork ancestors that are of `this` only
    * @property {Ancestors} otherFork ancestors that are of `other` only
    * 
-   * @param {fabric.Object} other
+   * @param {fabricObject} other
    * @param {boolean} [strict] finds only ancestors that are objects (without canvas)
    * @returns {AncestryComparison | undefined}
    * 
@@ -111,7 +115,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
 
   /**
    *
-   * @param {fabric.Object} other
+   * @param {fabricObject} other
    * @param {boolean} [strict] checks only ancestors that are objects (without canvas)
    * @returns {boolean}
    */

@@ -1,7 +1,7 @@
 /**
  * @namespace fabric.Collection
  */
-fabric.Collection = {
+export const Collection = {
 
   /**
    * @type {fabric.Object[]}

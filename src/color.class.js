@@ -1,4 +1,4 @@
-import { util } from './util';
+import { util } from "./util/index.js";
 
 /**
  * Color class
@@ -10,7 +10,7 @@ import { util } from './util';
  * @return {Color} thisArg
  * @tutorial {@link http://fabricjs.com/fabric-intro-part-2/#colors}
  */
-function Color(color) {
+const Color = function(color) {
   if (!color) {
     this.setSource([0, 0, 0, 1]);
   }

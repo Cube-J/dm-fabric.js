@@ -1,6 +1,6 @@
-import { util } from '../util';
-import { BaseFilter } from './base_filter.class';
-import { Color } from '../color.class';
+import { util } from '../util/index.js';
+import { BaseFilter } from './base_filter.class.js';
+import { Color } from '../color.class.js';
 
 var extend = util.object.extend,
   createClass = util.createClass;

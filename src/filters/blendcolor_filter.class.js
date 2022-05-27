@@ -1,5 +1,5 @@
-import { util } from '../util';
-import { Color } from '../color.class';
+import { util } from '../util/index.js';
+import { Color } from '../color.class.js';
 
 var createClass = util.createClass;
 

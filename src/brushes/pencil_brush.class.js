@@ -1,8 +1,8 @@
-import { util } from '../util';
-import { BaseBrush } from './base_brush.class';
-import { Point } from '../point.class';
-import { Shadow } from '../shadow.class';
-import { Path } from '../shapes/path.class';
+import { util } from '../util/index.js';
+import { BaseBrush } from './base_brush.class.js';
+import { Point } from '../point.class.js';
+import { Shadow } from '../shadow.class.js';
+import { Path } from '../shapes/path.class.js';
 
 /**
  * PencilBrush class

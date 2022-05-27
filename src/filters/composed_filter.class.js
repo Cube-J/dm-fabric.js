@@ -1,6 +1,6 @@
-import { util } from '../util';
-import { BaseFilter } from './base_filter.class';
-import { Image } from '../shapes/image.class';
+import { util } from '../util/index.js';
+import { BaseFilter } from './base_filter.class.js';
+import { Image } from '../shapes/image.class.js';
 
 var createClass = util.createClass;
 

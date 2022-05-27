@@ -1,4 +1,8 @@
-fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prototype */ {
+import { util } from "../util/index.js";
+import { fabricObject } from "../shapes/object.class.js";
+import { StaticCanvas } from "../static_canvas.class.js";
+
+util.object.extend(fabricObject.prototype, /** @lends fabricObject.prototype */ {
 
   /**
    * @private
@@ -14,7 +18,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
 
   /**
    * Straightens an object (rotating it from current angle to one of 0, 90, 180, 270, etc. depending on which is closer)
-   * @return {fabric.Object} thisArg
+   * @return {fabricObject} thisArg
    * @chainable
    */
   straighten: function() {
@@ -22,11 +26,11 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
   },
 
   /**
-   * Same as {@link fabric.Object.prototype.straighten} but with animation
+   * Same as {@link fabricObject.prototype.straighten} but with animation
    * @param {Object} callbacks Object with callback functions
    * @param {Function} [callbacks.onComplete] Invoked on completion
    * @param {Function} [callbacks.onChange] Invoked on every step of animation
-   * @return {fabric.Object} thisArg
+   * @return {fabricObject} thisArg
    */
   fxStraighten: function(callbacks) {
     callbacks = callbacks || { };
@@ -36,7 +40,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
         onChange = callbacks.onChange || empty,
         _this = this;
 
-    return fabric.util.animate({
+    return util.animate({
       target: this,
       startValue: this.get('angle'),
       endValue: this._getAngleValueForStraighten(),
@@ -53,11 +57,11 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
   }
 });
 
-fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.StaticCanvas.prototype */ {
+util.object.extend(StaticCanvas.prototype, /** @lends StaticCanvas.prototype */ {
 
   /**
    * Straightens object, then rerenders canvas
-   * @param {fabric.Object} object Object to straighten
+   * @param {fabricObject} object Object to straighten
    * @return {fabric.Canvas} thisArg
    * @chainable
    */
@@ -69,7 +73,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
 
   /**
    * Same as {@link fabric.Canvas.prototype.straightenObject}, but animated
-   * @param {fabric.Object} object Object to straighten
+   * @param {fabricObject} object Object to straighten
    * @return {fabric.Canvas} thisArg
    */
   fxStraightenObject: function (object) {

@@ -1,4 +1,4 @@
-import { object } from './lang_object';
+import { object } from './lang_object.js';
 
 var extend = object.extend,
     clone = object.clone;

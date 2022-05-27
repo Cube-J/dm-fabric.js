@@ -1,13 +1,13 @@
-import Point from '../point.class';
-import Group from '../shapes/group.class';
-import Text from '../shapes/text.class';
-import Point from '../point.class';
-import Gradient from '../gradient.class';
-import Pattern from '../pattern.class';
-import { array } from './lang_array';
-import { string } from './lang_string';
+import { Point } from '../point.class.js';
+import { Group } from '../shapes/group.class.js';
+import { Text } from '../shapes/text.class.js';
+import { fabricObject } from '../shapes/object.class.js';
+import { Gradient } from '../gradient.class.js';
+import { Pattern } from '../pattern.class.js';
+import { array } from './lang_array.js';
+import { string } from './lang_string.js';
+import { iMatrix, DPI, charWidthsCache } from '../header.js';
 
-var global = this;
 var sqrt = Math.sqrt,
     atan2 = Math.atan2,
     pow = Math.pow,
@@ -302,7 +302,7 @@ function transformPoint(p, t, ignoreOffset) {
  * var obj = new fabric.Rect({ left: 20, top: 20, width: 60, height: 60, strokeWidth: 0 });
  * var group = new Group([obj], { strokeWidth: 0 });
  * var sentPoint1 = fabric.util.sendPointToPlane(new Point(50, 50), null, group.calcTransformMatrix());
- * var sentPoint2 = fabric.util.sendPointToPlane(new Point(50, 50), window.iMatrix, group.calcTransformMatrix());
+ * var sentPoint2 = fabric.util.sendPointToPlane(new Point(50, 50), iMatrix, group.calcTransformMatrix());
  * console.log(sentPoint1, sentPoint2) //  both points print (0,0) which is the center of group
  *
  * @static
@@ -316,8 +316,8 @@ function transformPoint(p, t, ignoreOffset) {
 function sendPointToPlane(point, from, to) {
   //  we are actually looking for the transformation from the destination plane to the source plane (which is a linear mapping)
   //  the object will exist on the destination plane and we want it to seem unchanged by it so we reverse the destination matrix (to) and then apply the source matrix (from)
-  var inv = invertTransform(to || window.iMatrix);
-  var t = multiplyTransformMatrices(inv, from || window.iMatrix);
+  var inv = invertTransform(to || iMatrix);
+  var t = multiplyTransformMatrices(inv, from || iMatrix);
   return transformPoint(point, t);
 }
 
@@ -428,19 +428,19 @@ function parseUnit(value, fontSize) {
   }
   switch (unit[0]) {
     case 'mm':
-      return number * window.DPI / 25.4;
+      return number * DPI / 25.4;
 
     case 'cm':
-      return number * window.DPI / 2.54;
+      return number * DPI / 2.54;
 
     case 'in':
-      return number * window.DPI;
+      return number * DPI;
 
     case 'pt':
-      return number * window.DPI / 72; // or * 4 / 3
+      return number * DPI / 72; // or * 4 / 3
 
     case 'pc':
-      return number * window.DPI / 72 * 12; // or * 16
+      return number * DPI / 72 * 12; // or * 16
 
     case 'em':
       return number * fontSize;
@@ -508,12 +508,12 @@ function getSvgAttributes(type) {
  */
 function resolveNamespace(namespace) {
   if (!namespace) {
-    return fabric;
+    return this;
   }
 
   var parts = namespace.split('.'),
       len = parts.length, i,
-      obj = global || window;
+      obj = window;
 
   for (i = 0; i < len; ++i) {
     obj = obj[parts[i]];
@@ -609,7 +609,7 @@ function enlivenObjectEnlivables(serializedObject) {
  * @static
  * @memberOf fabric.util
  * @param {Array} elements SVG elements to group
- * @return {fabric.Object|Group}
+ * @return {fabricObject|Group}
  */
 function groupSVGElements(elements) {
   if (elements && elements.length === 1) {
@@ -741,7 +741,7 @@ function qrDecompose(a) {
  */
 function calcRotateMatrix(options) {
   if (!options.angle) {
-    return window.iMatrix.concat();
+    return iMatrix.concat();
   }
   var theta = degreesToRadians(options.angle),
       cos = cos(theta),
@@ -828,7 +828,7 @@ function composeMatrix(options) {
  * reset an object transform state to neutral. Top and left are not accounted for
  * @static
  * @memberOf fabric.util
- * @param  {fabric.Object} target object to transform
+ * @param  {fabricObject} target object to transform
  */
 function resetObjectTransform(target) {
   target.scaleX = 1;
@@ -844,7 +844,7 @@ function resetObjectTransform(target) {
  * Extract Object transform values
  * @static
  * @memberOf fabric.util
- * @param  {fabric.Object} target object to read from
+ * @param  {fabricObject} target object to read from
  * @return {Object} Components of transform
  */
 function saveObjectTransform(target) {
@@ -950,10 +950,10 @@ function parsePreserveAspectRatioAttribute(attribute) {
 function clearFabricFontCache(fontFamily) {
   fontFamily = (fontFamily || '').toLowerCase();
   if (!fontFamily) {
-    window.charWidthsCache = { };
+    for (var member in charWidthsCache) delete charWidthsCache[member];
   }
-  else if (window.charWidthsCache[fontFamily]) {
-    delete window.charWidthsCache[fontFamily];
+  else if (charWidthsCache[fontFamily]) {
+    delete charWidthsCache[fontFamily];
   }
 }
 
@@ -981,10 +981,10 @@ function capValue(min, value, max) {
  * keeping aspect ratio intact.
  * respect the total allowed area for the cache.
  * @memberOf fabric.util
- * @param {Object | fabric.Object} source
+ * @param {Object | fabricObject} source
  * @param {Number} source.height natural unscaled height of the object
  * @param {Number} source.width natural unscaled width of the object
- * @param {Object | fabric.Object} destination
+ * @param {Object | fabricObject} destination
  * @param {Number} destination.height natural unscaled height of the object
  * @param {Number} destination.width natural unscaled width of the object
  * @return {Number} scale factor to apply to source to fit into destination
@@ -998,10 +998,10 @@ function findScaleToFit(source, destination) {
  * keeping aspect ratio intact.
  * respect the total allowed area for the cache.
  * @memberOf fabric.util
- * @param {Object | fabric.Object} source
+ * @param {Object | fabricObject} source
  * @param {Number} source.height natural unscaled height of the object
  * @param {Number} source.width natural unscaled width of the object
- * @param {Object | fabric.Object} destination
+ * @param {Object | fabricObject} destination
  * @param {Number} destination.height natural unscaled height of the object
  * @param {Number} destination.width natural unscaled width of the object
  * @return {Number} scale factor to apply to source to cover destination
@@ -1019,7 +1019,7 @@ function findScaleToCover(source, destination) {
  */
 function matrixToSVG(transform) {
   return 'matrix(' + transform.map(function(value) {
-    return toFixed(value, fabric.Object.NUM_FRACTION_DIGITS);
+    return toFixed(value, fabricObject.NUM_FRACTION_DIGITS);
   }).join(' ') + ')';
 }
 
@@ -1032,7 +1032,7 @@ function matrixToSVG(transform) {
  * in the opposite direction.
  * This util is used to add objects inside transformed groups or nested groups.
  * @memberOf fabric.util
- * @param {fabric.Object} object the object you want to transform
+ * @param {fabricObject} object the object you want to transform
  * @param {Array} transform the destination transform
  */
 function removeTransformFromObject(object, transform) {
@@ -1047,7 +1047,7 @@ function removeTransformFromObject(object, transform) {
  * Adding to an object a transform that scale by 2 is like scaling it by 2.
  * This is used when removing an object from an active selection for example.
  * @memberOf fabric.util
- * @param {fabric.Object} object the object you want to transform
+ * @param {fabricObject} object the object you want to transform
  * @param {Array} transform the destination transform
  */
 function addTransformToObject(object, transform) {
@@ -1060,7 +1060,7 @@ function addTransformToObject(object, transform) {
 /**
  * discard an object transform state and apply the one from the matrix.
  * @memberOf fabric.util
- * @param {fabric.Object} object the object you want to transform
+ * @param {fabricObject} object the object you want to transform
  * @param {Array} transform the destination transform
  */
 function applyTransformToObject(object, transform) {
@@ -1103,7 +1103,7 @@ function applyTransformToObject(object, transform) {
  *
  * @static
  * @memberof fabric.util
- * @param {fabric.Object} object
+ * @param {fabricObject} object
  * @param {Matrix} [from] plane matrix containing object. Passing `null` is equivalent to passing the identity matrix, which means `object` is a direct child of canvas.
  * @param {Matrix} [to] destination plane matrix to contain object. Passing `null` means `object` should be sent to the canvas coordinate plane.
  * @returns {Matrix} the transform matrix that was applied to `object`
@@ -1111,8 +1111,8 @@ function applyTransformToObject(object, transform) {
 function sendObjectToPlane(object, from, to) {
   //  we are actually looking for the transformation from the destination plane to the source plane (which is a linear mapping)
   //  the object will exist on the destination plane and we want it to seem unchanged by it so we reverse the destination matrix (to) and then apply the source matrix (from)
-  var inv = invertTransform(to || window.iMatrix);
-  var t = multiplyTransformMatrices(inv, from || window.iMatrix);
+  var inv = invertTransform(to || iMatrix);
+  var t = multiplyTransformMatrices(inv, from || iMatrix);
   applyTransformToObject(
     object,
     multiplyTransformMatrices(t, object.calcOwnMatrix())
@@ -1178,9 +1178,9 @@ function sizeAfterTransform(width, height, options) {
  * **(3)** both clip paths are not inverted - wrapper and clip paths remain unchanged.
  *
  * @memberOf fabric.util
- * @param {fabric.Object} c1
- * @param {fabric.Object} c2
- * @returns {fabric.Object} merged clip path
+ * @param {fabricObject} c1
+ * @param {fabricObject} c2
+ * @returns {fabricObject} merged clip path
  */
 function mergeClipPaths(c1, c2) {
   var a = c1, b = c2;

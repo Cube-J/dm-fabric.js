@@ -1,4 +1,167 @@
-import { util } from '../util';
+import { util } from './util/index.js';
+
+/*! Fabric.js Copyright 2008-2015, Printio (Juriy Zaytsev, Maxim Chernyak) */
+
+/**
+ * True when in environment that supports touch events
+ * @type boolean
+ */
+export const isTouchSupported = 'ontouchstart' in window || 'ontouchstart' in document ||
+ (window && window.navigator && window.navigator.maxTouchPoints > 0);
+
+
+/* _FROM_SVG_START_ */
+/**
+* Attributes parsed from all SVG elements
+* @type array
+*/
+export const SHARED_ATTRIBUTES = [
+ 'display',
+ 'transform',
+ 'fill', 'fill-opacity', 'fill-rule',
+ 'opacity',
+ 'stroke', 'stroke-dasharray', 'stroke-linecap', 'stroke-dashoffset',
+ 'stroke-linejoin', 'stroke-miterlimit',
+ 'stroke-opacity', 'stroke-width',
+ 'id', 'paint-order', 'vector-effect',
+ 'instantiated_by_use', 'clip-path',
+];
+/* _FROM_SVG_END_ */
+
+/**
+* Pixel per Inch as a default value set to 96. Can be changed for more realistic conversion.
+*/
+export const DPI = 96;
+export const reNum = '(?:[-+]?(?:\\d+|\\d*\\.\\d+)(?:[eE][-+]?\\d+)?)';
+export const commaWsp = '(?:\\s+,?\\s*|,\\s*)';
+export const rePathCommand = /([-+]?((\d+\.\d+)|((\d+)|(\.\d+)))(?:[eE][-+]?\d+)?)/ig;
+export const reNonWord = /[ \n\.,;!\?\-]/;
+export const fontPaths = { };
+export const iMatrix = [1, 0, 0, 1, 0, 0];
+export const svgNS = 'http://www.w3.org/2000/svg';
+
+/**
+* Pixel limit for cache canvases. 1Mpx , 4Mpx should be fine.
+* @since 1.7.14
+* @type Number
+* @default
+*/
+export const perfLimitSizeTotal = 2097152;
+
+/**
+* Pixel limit for cache canvases width or height. IE fixes the maximum at 5000
+* @since 1.7.14
+* @type Number
+* @default
+*/
+export const maxCacheSideLimit = 4096;
+
+/**
+* Lowest pixel limit for cache canvases, set at 256PX
+* @since 1.7.14
+* @type Number
+* @default
+*/
+export const minCacheSideLimit = 256;
+
+/**
+* Cache Object for widths of chars in text rendering.
+*/
+export const charWidthsCache = { };
+
+/**
+* if webgl is enabled and available, textureSize will determine the size
+* of the canvas backend
+* @since 2.0.0
+* @type Number
+* @default
+*/
+export const textureSize = 2048;
+
+/**
+* When 'true', style information is not retained when copy/pasting text, making
+* pasted text use destination style.
+* Defaults to 'false'.
+* @type Boolean
+* @default
+*/
+export let disableStyleCopyPaste = false;
+
+/**
+* Enable webgl for filtering picture is available
+* A filtering backend will be initialized, this will both take memory and
+* time since a default 2048x2048 canvas will be created for the gl context
+* @since 2.0.0
+* @type Boolean
+* @default
+*/
+export let enableGLFiltering = true;
+
+/**
+* Device Pixel Ratio
+* @see https://developer.apple.com/library/safari/documentation/AudioVideo/Conceptual/HTML-canvas-guide/SettingUptheCanvas/SettingUptheCanvas.html
+*/
+export const devicePixelRatio = window.webkitDevicePixelRatio ||
+                         window.mozDevicePixelRatio ||
+                         1;
+/**
+* Browser-specific constant to adjust CanvasRenderingContext2D.shadowBlur value,
+* which is unitless and not rendered equally across browsers.
+*
+* Values that work quite well (as of October 2017) are:
+* - Chrome: 1.5
+* - Edge: 1.75
+* - Firefox: 0.9
+* - Safari: 0.95
+*
+* @since 2.0.0
+* @type Number
+* @default 1
+*/
+export const browserShadowBlurConstant = 1;
+
+/**
+* This object contains the result of arc to bezier conversion for faster retrieving if the same arc needs to be converted again.
+* It was an internal variable, is accessible since version 2.3.4
+*/
+export const arcToSegmentsCache = { };
+
+/**
+* This object keeps the results of the boundsOfCurve calculation mapped by the joined arguments necessary to calculate it.
+* It does speed up calculation, if you parse and add always the same paths, but in case of heavy usage of freedrawing
+* you do not get any speed benefit and you get a big object in memory.
+* The object was a private variable before, while now is appended to the lib so that you have access to it and you
+* can eventually clear it.
+* It was an internal variable, is accessible since version 2.3.4
+*/
+export const boundsOfCurveCache = { };
+
+/**
+* If disabled boundsOfCurveCache is not used. For apps that make heavy usage of pencil drawing probably disabling it is better
+* @default true
+*/
+export let cachesBoundsOfCurve = true;
+
+/**
+* Skip performance testing of setupGLContext and force the use of putImageData that seems to be the one that works best on
+* Chrome + old hardware. if your users are experiencing empty images after filtering you may try to force this to true
+* this has to be set before instantiating the filtering backend ( before filtering the first image )
+* @type Boolean
+* @default false
+*/
+export let forceGLPutImageData = false;
+
+export const initFilterBackend = function() {
+ if (enableGLFiltering && isWebglSupported && isWebglSupported(textureSize)) {
+   console.log('max texture size: ' + maxTextureSize);
+   return (new WebglFilterBackend({ tileSize: textureSize }));
+ }
+ else if (Canvas2dFilterBackend) {
+   return (new Canvas2dFilterBackend());
+ }
+};
+
+//-------------move webgl_backend.class.js to here ↓------------------
 
 /**
  * Tests if webgl supports certain precision
@@ -17,20 +180,21 @@ function testPrecision(gl, precision){
   return true;
 }
 
+let maxTextureSize;
 /**
  * Indicate whether this filtering backend is supported by the user's browser.
  * @param {Number} tileSize check if the tileSize is supported
  * @returns {Boolean} Whether the user's browser supports WebGL.
  */
-window.isWebglSupported = function(tileSize) {
-  tileSize = tileSize || window.WebglFilterBackend.prototype.tileSize;
+export const isWebglSupported = function(tileSize) {
+  tileSize = tileSize || WebglFilterBackend.prototype.tileSize;
   var canvas = document.createElement('canvas');
   var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
   var isSupported = false;
   // eslint-disable-next-line
   if (gl) {
-    window.maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
-    isSupported = window.maxTextureSize >= tileSize;
+    maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+    isSupported = maxTextureSize >= tileSize;
     var precisions = ['highp', 'mediump', 'lowp'];
     for (var i = 0; i < 3; i++){
       if (testPrecision(gl, precisions[i])){
@@ -43,12 +207,12 @@ window.isWebglSupported = function(tileSize) {
   return isSupported;
 };
 
-window.WebglFilterBackend = WebglFilterBackend;
+export { maxTextureSize };
 
 /**
  * WebGL filter backend.
  */
-function WebglFilterBackend(options) {
+export function WebglFilterBackend(options) {
   if (options && options.tileSize) {
     this.tileSize = options.tileSize;
   }
@@ -56,7 +220,7 @@ function WebglFilterBackend(options) {
   this.captureGPUInfo();
 };
 
-WebglFilterBackend.prototype = /** @lends window.WebglFilterBackend.prototype */ {
+WebglFilterBackend.prototype = /** @lends WebglFilterBackend.prototype */ {
 
   tileSize: 2048,
 
@@ -107,7 +271,7 @@ WebglFilterBackend.prototype = /** @lends window.WebglFilterBackend.prototype */
     var targetCanvas = util.createCanvasElement();
     // eslint-disable-next-line no-undef
     var imageBuffer = new ArrayBuffer(width * height * 4);
-    if (window.forceGLPutImageData) {
+    if (forceGLPutImageData) {
       this.imageBuffer = imageBuffer;
       this.copyGLTo2D = copyGLTo2DPutImageData;
       return;
@@ -387,3 +551,5 @@ function copyGLTo2DPutImageData(gl, pipelineState) {
   var imgData = new ImageData(u8Clamped, dWidth, dHeight);
   ctx.putImageData(imgData, 0, 0);
 }
+//-------------move webgl_backend.class.js to here ↑------------------
+

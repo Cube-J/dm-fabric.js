@@ -1,4 +1,11 @@
-fabric.ElementsParser = function(elements, callback, options, reviver, parsingOptions, doc) {
+import { util } from "./util/index.js";
+import { log } from "./log.js";
+import { Gradient } from "./gradient.class.js";
+import { Image } from "./shapes/image.class.js";
+import { Group } from "./shapes/group.class.js";
+import { fabric } from "./index.js";
+
+const ElementsParser = function(elements, callback, options, reviver, parsingOptions, doc) {
   this.elements = elements;
   this.callback = callback;
   this.options = options;
@@ -25,7 +32,7 @@ fabric.ElementsParser = function(elements, callback, options, reviver, parsingOp
   };
 
   proto.findTag = function(el) {
-    return fabric[fabric.util.string.capitalize(el.tagName.replace('svg:', ''))];
+    return fabric[util.string.capitalize(el.tagName.replace('svg:', ''))];
   };
 
   proto.createObject = function(el, index) {
@@ -35,7 +42,7 @@ fabric.ElementsParser = function(elements, callback, options, reviver, parsingOp
         klass.fromElement(el, this.createCallback(index, el), this.options);
       }
       catch (err) {
-        fabric.log(err);
+        log(err);
       }
     }
     else {
@@ -49,7 +56,7 @@ fabric.ElementsParser = function(elements, callback, options, reviver, parsingOp
       var _options;
       _this.resolveGradient(obj, el, 'fill');
       _this.resolveGradient(obj, el, 'stroke');
-      if (obj instanceof fabric.Image && obj._originalElement) {
+      if (obj instanceof Image && obj._originalElement) {
         _options = obj.parsePreserveAspectRatioAttribute(el);
       }
       obj._removeTransformMatrix(_options);
@@ -75,7 +82,7 @@ fabric.ElementsParser = function(elements, callback, options, reviver, parsingOp
     var gradientDef = this.extractPropertyDefinition(obj, property, 'gradientDefs');
     if (gradientDef) {
       var opacityAttr = el.getAttribute(property + '-opacity');
-      var gradient = fabric.Gradient.fromElement(gradientDef, obj, opacityAttr, this.options);
+      var gradient = Gradient.fromElement(gradientDef, obj, opacityAttr, this.options);
       obj.set(property, gradient);
     }
   };
@@ -93,7 +100,7 @@ fabric.ElementsParser = function(elements, callback, options, reviver, parsingOp
         element, klass, objTransformInv, container, gTransform, options;
     if (clipPath) {
       container = [];
-      objTransformInv = fabric.util.invertTransform(obj.calcTransformMatrix());
+      objTransformInv = util.invertTransform(obj.calcTransformMatrix());
       // move the clipPath tag as sibling to the real element that is using it
       var clipPathTag = clipPath[0].parentNode;
       var clipPathOwner = usingElement;
@@ -114,16 +121,16 @@ fabric.ElementsParser = function(elements, callback, options, reviver, parsingOp
         clipPath = container[0];
       }
       else {
-        clipPath = new fabric.Group(container);
+        clipPath = new Group(container);
       }
-      gTransform = fabric.util.multiplyTransformMatrices(
+      gTransform = util.multiplyTransformMatrices(
         objTransformInv,
         clipPath.calcTransformMatrix()
       );
       if (clipPath.clipPath) {
         this.resolveClipPath(clipPath, clipPathOwner);
       }
-      var options = fabric.util.qrDecompose(gTransform);
+      var options = util.qrDecompose(gTransform);
       clipPath.flipX = false;
       clipPath.flipY = false;
       clipPath.set('scaleX', options.scaleX);
@@ -149,4 +156,6 @@ fabric.ElementsParser = function(elements, callback, options, reviver, parsingOp
       this.callback(this.instances, this.elements);
     }
   };
-})(fabric.ElementsParser.prototype);
+})(ElementsParser.prototype);
+
+export { ElementsParser };

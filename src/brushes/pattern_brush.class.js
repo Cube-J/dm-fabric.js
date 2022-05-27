@@ -1,6 +1,6 @@
-import { util } from "../util";
-import { PencilBrush } from "./pencil_brush.class";
-import { Pattern } from "../pattern.class";
+import { util } from "../util/index.js";
+import { PencilBrush } from "./pencil_brush.class.js";
+import { Pattern } from "../pattern.class.js";
 
 /**
  * PatternBrush class

@@ -1,9 +1,9 @@
-import { util } from '../util';
-import { BaseBrush } from './base_brush.class';
-import { Point } from '../point.class';
-import { Shadow } from '../shadow.class';
-import { Rect } from '../shapes/rect.class';
-import { Group } from '../shapes/group.class';
+import { util } from '../util/index.js';
+import { BaseBrush } from './base_brush.class.js';
+import { Point } from '../point.class.js';
+import { Shadow } from '../shadow.class.js';
+import { Rect } from '../shapes/rect.class.js';
+import { Group } from '../shapes/group.class.js';
 
 /**
  * SprayBrush class

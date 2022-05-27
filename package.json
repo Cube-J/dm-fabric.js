@@ -1,5 +1,5 @@
 {
-  "name": "fabric",
+  "name": "dm-fabric",
   "description": "Object model for HTML5 canvas, and SVG-to-canvas parser.",
   "homepage": "http://fabricjs.com/",
   "version": "5.1.0",
@@ -14,6 +14,14 @@
       "email": "melchiar2@gmail.com"
     }
   ],
+  "files": [
+    "/dist",
+    "/src"
+  ],
+  "module": "./dist/fabric.js",
+  "exports": {
+    "import": "./dist/fabric.js"
+  },
   "keywords": [
     "canvas",
     "graphic",
@@ -39,21 +47,8 @@
   "repository": "https://github.com/Cube-J/dm-fabric.js.git",
   "license": "MIT",
   "scripts": {
-    "changelog": "auto-changelog -o change-output.md --unreleased-only",
-    "build": "node ./scripts build",
-    "build:fast": "npm run build -- --fast",
-    "dev": "node ./scripts",
-    "start": "node ./scripts start",
-    "export": "node ./scripts website export",
-    "test": "node ./scripts test",
-    "test:coverage": "nyc --silent qunit test/node_test_setup.js test/lib test/unit",
-    "test:visual:coverage": "nyc --silent --no-clean qunit test/node_test_setup.js test/lib test/visual",
-    "coverage:report": "nyc report --reporter=lcov --reporter=text",
-    "lint": "eslint --config .eslintrc.json src",
-    "lint_tests": "eslint test/unit --config .eslintrc_tests && eslint test/visual --config .eslintrc_tests",
-    "all": "npm run build && npm run test -- --all && npm run lint && npm run lint_tests && npm run export",
-    "testem": "testem .",
-    "testem:ci": "testem ci"
+    "build": "rollup -c",
+    "build-bro": "browserify ./dist/index.cjs > ./dist/fabric.js"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
@@ -80,5 +75,7 @@
   "engines": {
     "node": ">=14.0.0"
   },
-  "main": "./dist/fabric.js"
+  "dependencies": {
+    "browserify": "^17.0.0"
+  }
 }

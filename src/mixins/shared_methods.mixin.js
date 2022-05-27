@@ -1,7 +1,7 @@
 /**
  * @namespace fabric.CommonMethods
  */
-fabric.CommonMethods = {
+export const CommonMethods = {
 
   /**
    * Sets object's properties from options

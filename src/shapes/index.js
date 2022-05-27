@@ -1,0 +1,15 @@
+export { ActiveSelection } from "./active_selection.class.js";
+export { Circle } from './circle.class.js';
+export { Ellipse } from './ellipse.class.js';
+export { Group } from './group.class.js';
+export { Image } from './image.class.js';
+export { IText } from './itext.class.js';
+export { Line } from './line.class.js';
+export { fabricObject } from './object.class.js';
+export { Path } from './path.class.js';
+export { Polygon } from './polygon.class.js';
+export { Polyline } from './polyline.class.js';
+export { Rect } from './rect.class.js';
+export { Text } from './text.class.js';
+export { Textbox } from './textbox.class.js';
+export { Triangle } from './triangle.class.js';

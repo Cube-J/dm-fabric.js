@@ -1,4 +1,8 @@
-fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.StaticCanvas.prototype */ {
+import { util } from '../util/index.js';
+import { Canvas } from '../canvas.class.js';
+import { StaticCanvas } from '../static_canvas.class.js';
+
+util.object.extend(StaticCanvas.prototype, /** @lends StaticCanvas.prototype */ {
   /**
    * Populates canvas with data from the specified JSON.
    * JSON format must conform to the one of {@link fabric.Canvas#toJSON}
@@ -27,17 +31,17 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
     // serialize if it wasn't already
     var serialized = (typeof json === 'string')
       ? JSON.parse(json)
-      : fabric.util.object.clone(json);
+      : util.object.clone(json);
 
     var _this = this,
         renderOnAddRemove = this.renderOnAddRemove;
 
     this.renderOnAddRemove = false;
 
-    return fabric.util.enlivenObjects(serialized.objects || [], '', reviver)
+    return util.enlivenObjects(serialized.objects || [], '', reviver)
       .then(function(enlived) {
         _this.clear();
-        return fabric.util.enlivenObjectEnlivables({
+        return util.enlivenObjectEnlivables({
           backgroundImage: serialized.backgroundImage,
           backgroundColor: serialized.background,
           overlayImage: serialized.overlayImage,
@@ -98,12 +102,12 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
    * @returns {Promise<fabric.Canvas>}
    */
   cloneWithoutData: function() {
-    var el = fabric.util.createCanvasElement();
+    var el = util.createCanvasElement();
 
     el.width = this.width;
     el.height = this.height;
     // this seems wrong. either Canvas or StaticCanvas
-    var clone = new fabric.Canvas(el);
+    var clone = new Canvas(el);
     var data = {};
     if (this.backgroundImage) {
       data.backgroundImage = this.backgroundImage.toObject();

@@ -1,10 +1,10 @@
-import { util } from '../util';
-import { BaseBrush } from './base_brush.class';
-import { Shadow } from '../shadow.class';
-import { Point } from '../point.class';
-import { Color } from '../color.class';
-import { Circle } from '../shapes/circle.class';
-import { Group } from '../shapes/group.class';
+import { util } from '../util/index.js';
+import { BaseBrush } from './base_brush.class.js';
+import { Shadow } from '../shadow.class.js';
+import { Point } from '../point.class.js';
+import { Color } from '../color.class.js';
+import { Circle } from '../shapes/circle.class.js';
+import { Group } from '../shapes/group.class.js';
 
 /**
  * CircleBrush class

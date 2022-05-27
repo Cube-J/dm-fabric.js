@@ -1,5 +1,5 @@
-import { Image } from '../shapes/image.class';
-import { util } from '../util';
+import { Image } from '../shapes/image.class.js';
+import { util } from '../util/index.js';
 
 
 /**

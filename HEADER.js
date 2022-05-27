@@ -4,7 +4,7 @@
  * True when in environment that supports touch events
  * @type boolean
  */
-window.isTouchSupported = 'ontouchstart' in window || 'ontouchstart' in document ||
+fabric.isTouchSupported = 'ontouchstart' in window || 'ontouchstart' in document ||
   (window && window.navigator && window.navigator.maxTouchPoints > 0);
 
 
@@ -13,7 +13,7 @@ window.isTouchSupported = 'ontouchstart' in window || 'ontouchstart' in document
  * Attributes parsed from all SVG elements
  * @type array
  */
-window.SHARED_ATTRIBUTES = [
+fabric.SHARED_ATTRIBUTES = [
   'display',
   'transform',
   'fill', 'fill-opacity', 'fill-rule',
@@ -29,14 +29,14 @@ window.SHARED_ATTRIBUTES = [
 /**
  * Pixel per Inch as a default value set to 96. Can be changed for more realistic conversion.
  */
-window.DPI = 96;
-window.reNum = '(?:[-+]?(?:\\d+|\\d*\\.\\d+)(?:[eE][-+]?\\d+)?)';
-window.commaWsp = '(?:\\s+,?\\s*|,\\s*)';
-window.rePathCommand = /([-+]?((\d+\.\d+)|((\d+)|(\.\d+)))(?:[eE][-+]?\d+)?)/ig;
-window.reNonWord = /[ \n\.,;!\?\-]/;
-window.fontPaths = { };
-window.iMatrix = [1, 0, 0, 1, 0, 0];
-window.svgNS = 'http://www.w3.org/2000/svg';
+fabric.DPI = 96;
+fabric.reNum = '(?:[-+]?(?:\\d+|\\d*\\.\\d+)(?:[eE][-+]?\\d+)?)';
+fabric.commaWsp = '(?:\\s+,?\\s*|,\\s*)';
+fabric.rePathCommand = /([-+]?((\d+\.\d+)|((\d+)|(\.\d+)))(?:[eE][-+]?\d+)?)/ig;
+fabric.reNonWord = /[ \n\.,;!\?\-]/;
+fabric.fontPaths = { };
+fabric.iMatrix = [1, 0, 0, 1, 0, 0];
+fabric.svgNS = 'http://www.w3.org/2000/svg';
 
 /**
  * Pixel limit for cache canvases. 1Mpx , 4Mpx should be fine.
@@ -44,7 +44,7 @@ window.svgNS = 'http://www.w3.org/2000/svg';
  * @type Number
  * @default
  */
-window.perfLimitSizeTotal = 2097152;
+fabric.perfLimitSizeTotal = 2097152;
 
 /**
  * Pixel limit for cache canvases width or height. IE fixes the maximum at 5000
@@ -52,7 +52,7 @@ window.perfLimitSizeTotal = 2097152;
  * @type Number
  * @default
  */
-window.maxCacheSideLimit = 4096;
+fabric.maxCacheSideLimit = 4096;
 
 /**
  * Lowest pixel limit for cache canvases, set at 256PX
@@ -60,12 +60,12 @@ window.maxCacheSideLimit = 4096;
  * @type Number
  * @default
  */
-window.minCacheSideLimit = 256;
+fabric.minCacheSideLimit = 256;
 
 /**
  * Cache Object for widths of chars in text rendering.
  */
-window.charWidthsCache = { };
+fabric.charWidthsCache = { };
 
 /**
  * if webgl is enabled and available, textureSize will determine the size
@@ -74,7 +74,7 @@ window.charWidthsCache = { };
  * @type Number
  * @default
  */
-window.textureSize = 2048;
+fabric.textureSize = 2048;
 
 /**
  * When 'true', style information is not retained when copy/pasting text, making
@@ -83,7 +83,7 @@ window.textureSize = 2048;
  * @type Boolean
  * @default
  */
-window.disableStyleCopyPaste = false;
+fabric.disableStyleCopyPaste = false;
 
 /**
  * Enable webgl for filtering picture is available
@@ -93,13 +93,13 @@ window.disableStyleCopyPaste = false;
  * @type Boolean
  * @default
  */
-window.enableGLFiltering = true;
+fabric.enableGLFiltering = true;
 
 /**
  * Device Pixel Ratio
  * @see https://developer.apple.com/library/safari/documentation/AudioVideo/Conceptual/HTML-canvas-guide/SettingUptheCanvas/SettingUptheCanvas.html
  */
-window.devicePixelRatio = window.devicePixelRatio ||
+fabric.devicePixelRatio = fabric.devicePixelRatio ||
                           window.webkitDevicePixelRatio ||
                           window.mozDevicePixelRatio ||
                           1;
@@ -117,13 +117,13 @@ window.devicePixelRatio = window.devicePixelRatio ||
  * @type Number
  * @default 1
  */
-window.browserShadowBlurConstant = 1;
+fabric.browserShadowBlurConstant = 1;
 
 /**
  * This object contains the result of arc to bezier conversion for faster retrieving if the same arc needs to be converted again.
  * It was an internal variable, is accessible since version 2.3.4
  */
-window.arcToSegmentsCache = { };
+fabric.arcToSegmentsCache = { };
 
 /**
  * This object keeps the results of the boundsOfCurve calculation mapped by the joined arguments necessary to calculate it.
@@ -133,13 +133,13 @@ window.arcToSegmentsCache = { };
  * can eventually clear it.
  * It was an internal variable, is accessible since version 2.3.4
  */
-window.boundsOfCurveCache = { };
+fabric.boundsOfCurveCache = { };
 
 /**
  * If disabled boundsOfCurveCache is not used. For apps that make heavy usage of pencil drawing probably disabling it is better
  * @default true
  */
-window.cachesBoundsOfCurve = true;
+fabric.cachesBoundsOfCurve = true;
 
 /**
  * Skip performance testing of setupGLContext and force the use of putImageData that seems to be the one that works best on
@@ -148,12 +148,12 @@ window.cachesBoundsOfCurve = true;
  * @type Boolean
  * @default false
  */
-window.forceGLPutImageData = false;
+fabric.forceGLPutImageData = false;
 
-window.initFilterBackend = window.filterBackend = function() {
-  if (window.enableGLFiltering && window.isWebglSupported && window.isWebglSupported(window.textureSize)) {
-    console.log('max texture size: ' + window.maxTextureSize);
-    return (new window.WebglFilterBackend({ tileSize: window.textureSize }));
+fabric.initFilterBackend = window.filterBackend = function() {
+  if (fabric.enableGLFiltering && fabric.isWebglSupported && fabric.isWebglSupported(fabric.textureSize)) {
+    console.log('max texture size: ' + fabric.maxTextureSize);
+    return (new fabric.WebglFilterBackend({ tileSize: fabric.textureSize }));
   }
   else if (fabric.Canvas2dFilterBackend) {
     return (new fabric.Canvas2dFilterBackend());

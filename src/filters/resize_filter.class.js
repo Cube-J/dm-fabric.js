@@ -1,5 +1,5 @@
-import { util } from '../util';
-import { BaseFilter } from './base_filter.class';
+import { util } from '../util/index.js';
+import { BaseFilter } from './base_filter.class.js';
 
 var pow = Math.pow, floor = Math.floor,
     sqrt = Math.sqrt, abs = Math.abs, round = Math.round, sin = Math.sin,

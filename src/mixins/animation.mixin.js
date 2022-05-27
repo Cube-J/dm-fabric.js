@@ -1,4 +1,8 @@
-fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.StaticCanvas.prototype */ {
+import { util } from '../util/index.js';
+import { StaticCanvas } from '../static_canvas.class.js';
+import { fabricObject } from '../shapes/object.class.js';
+
+util.object.extend(StaticCanvas.prototype, /** @lends StaticCanvas.prototype */ {
 
   /**
    * Animation duration (in ms) for fx* methods
@@ -9,7 +13,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
 
   /**
    * Centers object horizontally with animation.
-   * @param {fabric.Object} object Object to center
+   * @param {Object} object Object to center
    * @param {Object} [callbacks] Callbacks object with optional "onComplete" and/or "onChange" properties
    * @param {Function} [callbacks.onComplete] Invoked on completion
    * @param {Function} [callbacks.onChange] Invoked on every step of animation
@@ -23,7 +27,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
         onChange = callbacks.onChange || empty,
         _this = this;
 
-    return fabric.util.animate({
+    return util.animate({
       target: this,
       startValue: object.getX(),
       endValue: this.getCenterPoint().x,
@@ -42,7 +46,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
 
   /**
    * Centers object vertically with animation.
-   * @param {fabric.Object} object Object to center
+   * @param {Object} object Object to center
    * @param {Object} [callbacks] Callbacks object with optional "onComplete" and/or "onChange" properties
    * @param {Function} [callbacks.onComplete] Invoked on completion
    * @param {Function} [callbacks.onChange] Invoked on every step of animation
@@ -56,7 +60,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
         onChange = callbacks.onChange || empty,
         _this = this;
 
-    return fabric.util.animate({
+    return util.animate({
       target: this,
       startValue: object.getY(),
       endValue: this.getCenterPoint().y,
@@ -75,7 +79,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
 
   /**
    * Same as `fabric.Canvas#remove` but animated
-   * @param {fabric.Object} object Object to remove
+   * @param {Object} object Object to remove
    * @param {Object} [callbacks] Callbacks object with optional "onComplete" and/or "onChange" properties
    * @param {Function} [callbacks.onComplete] Invoked on completion
    * @param {Function} [callbacks.onChange] Invoked on every step of animation
@@ -89,7 +93,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
         onChange = callbacks.onChange || empty,
         _this = this;
 
-    return fabric.util.animate({
+    return util.animate({
       target: this,
       startValue: object.opacity,
       endValue: 0,
@@ -107,12 +111,12 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
   }
 });
 
-fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prototype */ {
+util.object.extend(fabricObject.prototype, /** @lends Object.prototype */ {
   /**
    * Animates object's properties
    * @param {String|Object} property Property to animate (if string) or properties to animate (if object)
    * @param {Number|Object} value Value to animate property to (if string was given first) or options object
-   * @return {fabric.Object} thisArg
+   * @return {Object} thisArg
    * @tutorial {@link http://fabricjs.com/fabric-intro-part-2#animation}
    * @return {fabric.AnimationContext | fabric.AnimationContext[]} animation context (or an array if passed multiple properties)
    *
@@ -161,7 +165,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
       options = { };
     }
     else {
-      options = fabric.util.object.clone(options);
+      options = util.object.clone(options);
     }
 
     if (~property.indexOf('.')) {
@@ -222,10 +226,10 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     };
 
     if (propIsColor) {
-      return fabric.util.animateColor(_options.startValue, _options.endValue, _options.duration, _options);
+      return util.animateColor(_options.startValue, _options.endValue, _options.duration, _options);
     }
     else {
-      return fabric.util.animate(_options);
+      return util.animate(_options);
     }
   }
 });

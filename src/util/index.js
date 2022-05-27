@@ -1,16 +1,16 @@
 // import { ease } from './anim_ease';
-import * as anim_ease from './anim_ease';
-import { animateColor } from './animate_color';
-import { animate, requestAnimFrame, cancelAnimFrame, runningAnimations } from './animate';
-import { addListener, removeListener, getPointer, isTouchEvent } from './dom_event';
-import { setImageSmoothing, getById, toArray, addClass, makeElement, wrapElement, getScrollLeftTop, getElementOffset, getNodeCanvas, cleanUpJsdomNode, makeElementUnselectable, makeElementSelectable } from './dom_misc';
+import * as anim_ease from './anim_ease.js';
+import { animateColor } from './animate_color.js';
+import { animate, requestAnimFrame, cancelAnimFrame, runningAnimations } from './animate.js';
+import { addListener, removeListener, getPointer, isTouchEvent } from './dom_event.js';
+import { setImageSmoothing, getById, toArray, addClass, makeElement, wrapElement, getScrollLeftTop, getElementOffset, cleanUpJsdomNode, makeElementUnselectable, makeElementSelectable } from './dom_misc.js';
 // import * as dom_misc from './dom_misc';
-import { request } from './dom_request';
-import { setStyle } from './dom_style';
-import { array } from './lang_array';
-import { createClass } from './lang_class';
-import { object } from './lang_object';
-import { string } from './lang_string';
+import { request } from './dom_request.js';
+import { setStyle } from './dom_style.js';
+import { array } from './lang_array.js';
+import { createClass } from './lang_class.js';
+import { object } from './lang_object.js';
+import { string } from './lang_string.js';
 import { cos,
   sin,
   removeFromArray,
@@ -64,8 +64,8 @@ import { cos,
   applyTransformToObject,
   sendObjectToPlane,
   sizeAfterTransform,
-  mergeClipPaths, } from './misc';
-import { createAccessors } from './named_accessors.mixin'
+  mergeClipPaths, } from './misc.js';
+import { createAccessors } from './named_accessors.mixin.js'
 import { joinPath,
   parsePath,
   makePathSimpler,
@@ -74,8 +74,8 @@ import { joinPath,
   getBoundsOfCurve,
   getPointOnPath,
   transformPath,
-  getRegularPolygonPath } from './path'
-import { Observable } from '../mixins/observable.mixin';
+  getRegularPolygonPath } from './path.js'
+import { Observable } from '../mixins/observable.mixin.js';
 
 const util = {
   // ease,
@@ -96,7 +96,6 @@ const util = {
   wrapElement,
   getScrollLeftTop,
   getElementOffset,
-  getNodeCanvas,
   cleanUpJsdomNode,
   makeElementUnselectable,
   makeElementSelectable,

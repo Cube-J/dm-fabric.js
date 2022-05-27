@@ -365,7 +365,7 @@ export const ease = {
   easeInCubic: function(t, b, c, d) {
     return c * (t /= d) * t * t + b;
   },
-
+  
   easeOutCubic: easeOutCubic,
   easeInOutCubic: easeInOutCubic,
   easeInQuart: easeInQuart,

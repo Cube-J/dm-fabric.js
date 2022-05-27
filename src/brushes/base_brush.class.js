@@ -1,5 +1,6 @@
-import { util } from '../util';
-import { Color } from '../color.class';
+import { util } from '../util/index.js';
+import { Color } from '../color.class.js';
+import { devicePixelRatio } from '../header.js';
 
 /**
  * BaseBrush class
@@ -107,7 +108,7 @@ export const BaseBrush = util.createClass(/** @lends fabric.BaseBrush.prototype 
         ctx = canvas.contextTop,
         zoom = canvas.getZoom();
     if (canvas && canvas._isRetinaScaling()) {
-      zoom *= window.devicePixelRatio;
+      zoom *= devicePixelRatio;
     }
 
     ctx.shadowColor = shadow.color;

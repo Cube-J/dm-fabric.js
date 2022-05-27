@@ -1,5 +1,3 @@
-import { falseFunction } from './misc';
-
 var _slice = Array.prototype.slice;
 
 /**
@@ -219,7 +217,9 @@ let makeElementUnselectable, makeElementSelectable;
    */
   makeElementUnselectable = function(element) {
     if (typeof element.onselectstart !== 'undefined') {
-      element.onselectstart = falseFunction;
+      element.onselectstart = function() {
+        return false;
+      };
     }
     if (selectProp) {
       element.style[selectProp] = 'none';
@@ -277,7 +277,6 @@ export {
   wrapElement,
   getScrollLeftTop,
   getElementOffset,
-  getNodeCanvas,
   cleanUpJsdomNode,
   makeElementUnselectable,
   makeElementSelectable

@@ -1,5 +1,5 @@
-import { util } from '../util';
-import { BaseFilter } from './base_filter.class';
+import { util } from '../util/index.js';
+import { BaseFilter } from './base_filter.class.js';
 
 var createClass = util.createClass;
 
@@ -18,7 +18,7 @@ var createClass = util.createClass;
  * object.applyFilters();
  * canvas.renderAll();
  */
-Blur = createClass(BaseFilter, /** @lends fabric.Image.filters.Blur.prototype */ {
+const Blur = createClass(BaseFilter, /** @lends fabric.Image.filters.Blur.prototype */ {
 
   type: 'Blur',
 

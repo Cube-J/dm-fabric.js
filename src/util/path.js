@@ -1,5 +1,6 @@
-import { cos, sin, multiplyTransformMatrices, transformPoint } from './misc'
-import Point from '../point.class';
+import { cos, sin, multiplyTransformMatrices, transformPoint } from './misc.js'
+import { Point } from '../point.class.js';
+import { cachesBoundsOfCurve, boundsOfCurveCache, rePathCommand, commaWsp } from "../header.js";
 
 var _join = Array.prototype.join,
     commandLengths = {
@@ -124,10 +125,10 @@ function calcVectorAngle(ux, uy, vx, vy) {
 // TODO: can we normalize this with the starting points set at 0 and then translated the bbox?
 function getBoundsOfCurve(x0, y0, x1, y1, x2, y2, x3, y3) {
   var argsString;
-  if (window.cachesBoundsOfCurve) {
+  if (cachesBoundsOfCurve) {
     argsString = _join.call(arguments);
-    if (window.boundsOfCurveCache[argsString]) {
-      return window.boundsOfCurveCache[argsString];
+    if (boundsOfCurveCache[argsString]) {
+      return boundsOfCurveCache[argsString];
     }
   }
 
@@ -198,8 +199,8 @@ function getBoundsOfCurve(x0, y0, x1, y1, x2, y2, x3, y3) {
       y: max.apply(null, bounds[1])
     }
   ];
-  if (window.cachesBoundsOfCurve) {
-    window.boundsOfCurveCache[argsString] = result;
+  if (cachesBoundsOfCurve) {
+    boundsOfCurveCache[argsString] = result;
   }
   return result;
 }
@@ -680,10 +681,10 @@ function parsePath(pathString) {
       coords = [],
       currentPath,
       parsed,
-      re = window.rePathCommand,
+      re = rePathCommand,
       rNumber = '[-+]?(?:\\d*\\.\\d+|\\d+\\.?)(?:[eE][-+]?\\d+)?\\s*',
-      rNumberCommaWsp = '(' + rNumber + ')' + window.commaWsp,
-      rFlagCommaWsp = '([01])' + window.commaWsp + '?',
+      rNumberCommaWsp = '(' + rNumber + ')' + commaWsp,
+      rFlagCommaWsp = '([01])' + commaWsp + '?',
       rArcSeq = rNumberCommaWsp + '?' + rNumberCommaWsp + '?' + rNumberCommaWsp + rFlagCommaWsp + rFlagCommaWsp +
         rNumberCommaWsp + '?(' + rNumber + ')',
       regArcArgumentSequence = new RegExp(rArcSeq, 'g'),
