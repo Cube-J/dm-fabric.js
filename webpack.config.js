@@ -15,4 +15,10 @@ module.exports = {
     },
   },
   // devtool: 'source-map'
+  // externals: {
+  //   'canvas': 'undefined',
+  //   'jsdom/lib/jsdom/utils': JSON.stringify({ Canvas: null }),
+  //   'jsdom/lib/jsdom/living/generated/utils': JSON.stringify({ implForWrapper: null }),
+  //   'jsdom': JSON.stringify({ JSDOM: null })
+  // },
 };
